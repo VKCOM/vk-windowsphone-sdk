@@ -1,0 +1,66 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDK Sample", "SDK Sample\SDK Sample.csproj", "{5130DFDB-3C66-490B-8F50-D62B757EFDE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VK.WindowsPhone.SDK", "VK.WindowsPhone.SDK\VK.WindowsPhone.SDK.csproj", "{E700A31E-1BB7-4231-8790-91A75649009B}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://alexsychev.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = SDK\u0020Sample\\SDK\u0020Sample.csproj
+		SccProjectName1 = SDK\u0020Sample
+		SccLocalPath1 = SDK\u0020Sample
+		SccProjectUniqueName2 = VK.WindowsPhone.SDK\\VK.WindowsPhone.SDK.csproj
+		SccProjectName2 = VK.WindowsPhone.SDK
+		SccLocalPath2 = VK.WindowsPhone.SDK
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|ARM = Debug|ARM
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|ARM = Release|ARM
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5130DFDB-3C66-490B-8F50-D62B757EFDE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5130DFDB-3C66-490B-8F50-D62B757EFDE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5130DFDB-3C66-490B-8F50-D62B757EFDE5}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5130DFDB-3C66-490B-8F50-D62B757EFDE5}.Debug|ARM.ActiveCfg = Debug|ARM
+		{5130DFDB-3C66-490B-8F50-D62B757EFDE5}.Debug|ARM.Build.0 = Debug|ARM
+		{5130DFDB-3C66-490B-8F50-D62B757EFDE5}.Debug|ARM.Deploy.0 = Debug|ARM
+		{5130DFDB-3C66-490B-8F50-D62B757EFDE5}.Debug|x86.ActiveCfg = Debug|x86
+		{5130DFDB-3C66-490B-8F50-D62B757EFDE5}.Debug|x86.Build.0 = Debug|x86
+		{5130DFDB-3C66-490B-8F50-D62B757EFDE5}.Debug|x86.Deploy.0 = Debug|x86
+		{5130DFDB-3C66-490B-8F50-D62B757EFDE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5130DFDB-3C66-490B-8F50-D62B757EFDE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5130DFDB-3C66-490B-8F50-D62B757EFDE5}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{5130DFDB-3C66-490B-8F50-D62B757EFDE5}.Release|ARM.ActiveCfg = Release|ARM
+		{5130DFDB-3C66-490B-8F50-D62B757EFDE5}.Release|ARM.Build.0 = Release|ARM
+		{5130DFDB-3C66-490B-8F50-D62B757EFDE5}.Release|ARM.Deploy.0 = Release|ARM
+		{5130DFDB-3C66-490B-8F50-D62B757EFDE5}.Release|x86.ActiveCfg = Release|x86
+		{5130DFDB-3C66-490B-8F50-D62B757EFDE5}.Release|x86.Build.0 = Release|x86
+		{5130DFDB-3C66-490B-8F50-D62B757EFDE5}.Release|x86.Deploy.0 = Release|x86
+		{E700A31E-1BB7-4231-8790-91A75649009B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E700A31E-1BB7-4231-8790-91A75649009B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E700A31E-1BB7-4231-8790-91A75649009B}.Debug|ARM.ActiveCfg = Debug|ARM
+		{E700A31E-1BB7-4231-8790-91A75649009B}.Debug|ARM.Build.0 = Debug|ARM
+		{E700A31E-1BB7-4231-8790-91A75649009B}.Debug|x86.ActiveCfg = Debug|x86
+		{E700A31E-1BB7-4231-8790-91A75649009B}.Debug|x86.Build.0 = Debug|x86
+		{E700A31E-1BB7-4231-8790-91A75649009B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E700A31E-1BB7-4231-8790-91A75649009B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E700A31E-1BB7-4231-8790-91A75649009B}.Release|ARM.ActiveCfg = Release|ARM
+		{E700A31E-1BB7-4231-8790-91A75649009B}.Release|ARM.Build.0 = Release|ARM
+		{E700A31E-1BB7-4231-8790-91A75649009B}.Release|x86.ActiveCfg = Release|x86
+		{E700A31E-1BB7-4231-8790-91A75649009B}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
