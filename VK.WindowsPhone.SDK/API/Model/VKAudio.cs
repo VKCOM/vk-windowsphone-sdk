@@ -35,7 +35,7 @@ namespace VK.WindowsPhone.SDK.API.Model
             set
             {
                 _title = (value ?? "").ForUI();
-                _title = _artist.MakeIntoOneLine();
+                _title = _title.MakeIntoOneLine();
             }
         }
 
