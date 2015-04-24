@@ -1,11 +1,19 @@
-﻿using Microsoft.Phone.Controls;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+#if SILVERLIGHT
 using System.IO.IsolatedStorage;
+using Microsoft.Phone.Controls;
+#else
+
+#endif
+
 using System.Net;
 using VK.WindowsPhone.SDK.API.Model;
+using Windows.Storage;
+using System.Threading.Tasks;
 
 namespace VK.WindowsPhone.SDK.Util
 {
@@ -79,8 +87,8 @@ namespace VK.WindowsPhone.SDK.Util
         /// <returns>Contents of file</returns>
         public static String FileToString(String filename)
         {
-            String text;
-
+            String text = "";
+#if SILVERLIGHT
             using (var iso = IsolatedStorageFile.GetUserStoreForApplication())
             {
                 if (!iso.FileExists(filename))
@@ -90,7 +98,29 @@ namespace VK.WindowsPhone.SDK.Util
                 text = reader.ReadToEnd();
                 reader.Close();
             }
+#else
 
+            // Get the local folder.
+            StorageFolder local = Windows.Storage.ApplicationData.Current.LocalFolder;
+
+            if (local != null)
+            {
+
+                Task.Run(async () =>
+                    {
+                        // Get the file.
+                        var file = await local.OpenStreamForReadAsync(filename);
+
+                        // Read the data.
+                        using (StreamReader streamReader = new StreamReader(file))
+                        {
+                            text = streamReader.ReadToEnd();
+                        }
+                    }).Wait();
+                
+            }
+
+#endif
             return text;
         }
 
@@ -101,6 +131,8 @@ namespace VK.WindowsPhone.SDK.Util
         /// <param name="stringToWrite">String to save</param>
         public static void StringToFile(String filename, String stringToWrite)
         {
+#if SILVERLIGHT
+
             using (var iso = IsolatedStorageFile.GetUserStoreForApplication())
             {
                 using (IsolatedStorageFileStream file = iso.OpenFile(filename, FileMode.Create, FileAccess.Write))
@@ -111,6 +143,30 @@ namespace VK.WindowsPhone.SDK.Util
                     }
                 }
             }
+
+#else
+
+            byte[] fileBytes = System.Text.Encoding.UTF8.GetBytes(stringToWrite);
+
+
+            StorageFolder local = Windows.Storage.ApplicationData.Current.LocalFolder;
+
+            Task.Run(async () =>
+                {
+
+
+                    var file = await local.CreateFileAsync(filename,
+                    CreationCollisionOption.ReplaceExisting);
+
+
+                    using (var s = await file.OpenStreamForWriteAsync())
+                    {
+                        s.Write(fileBytes, 0, fileBytes.Length);
+                    }
+
+                }).Wait();
+
+#endif
         }
 
         private static readonly DateTime Jan1St1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);

@@ -1,0 +1,229 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{760BA847-660D-4269-95CF-B54B6E6E0D62}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VK.WindowsPhone.SDKXAML</RootNamespace>
+    <AssemblyName>VK.WindowsPhone.SDKXAML</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetPlatformVersion>8.1</TargetPlatformVersion>
+    <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{76F1466A-8B6D-4E39-A767-685A06062A39};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_PHONE_APP</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_PHONE_APP</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_PHONE_APP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
+    <OutputPath>bin\ARM\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_PHONE_APP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_PHONE_APP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_PHONE_APP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\DefaultLogger.cs">
+      <Link>API\DefaultLogger.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\IVKLogger.cs">
+      <Link>API\IVKLogger.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKAlbum.cs">
+      <Link>API\Model\VKAlbum.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKAttachment.cs">
+      <Link>API\Model\VKAttachment.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKAudio.cs">
+      <Link>API\Model\VKAudio.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKChat.cs">
+      <Link>API\Model\VKChat.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKComment.cs">
+      <Link>API\Model\VKComment.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKDocument.cs">
+      <Link>API\Model\VKDocument.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKGeo.cs">
+      <Link>API\Model\VKGeo.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKGroup.cs">
+      <Link>API\Model\VKGroup.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKLink.cs">
+      <Link>API\Model\VKLink.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKList.cs">
+      <Link>API\Model\VKList.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKMessage.cs">
+      <Link>API\Model\VKMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKNote.cs">
+      <Link>API\Model\VKNote.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKPage.cs">
+      <Link>API\Model\VKPage.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKPhoto.cs">
+      <Link>API\Model\VKPhoto.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKPlace.cs">
+      <Link>API\Model\VKPlace.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKPoll.cs">
+      <Link>API\Model\VKPoll.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKPrivacy.cs">
+      <Link>API\Model\VKPrivacy.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKUser.cs">
+      <Link>API\Model\VKUser.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKVideo.cs">
+      <Link>API\Model\VKVideo.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKWallPost.cs">
+      <Link>API\Model\VKWallPost.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\VKBackendResult.cs">
+      <Link>API\VKBackendResult.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\VKCaptchaUserRequest.cs">
+      <Link>API\VKCaptchaUserRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\VKError.cs">
+      <Link>API\VKError.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\VKRequest.cs">
+      <Link>API\VKRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\VKRequestParameters.cs">
+      <Link>API\VKRequestParameters.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\VKResultCode.cs">
+      <Link>API\VKResultCode.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\VKUploadRequest.cs">
+      <Link>API\VKUploadRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\VKValidationRequest.cs">
+      <Link>API\VKValidationRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\Util\StreamUtils.cs">
+      <Link>Util\StreamUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\Util\StringUtil.cs">
+      <Link>Util\StringUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\Util\VKExecute.cs">
+      <Link>Util\VKExecute.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\Util\VKHttpRequestHelper.cs">
+      <Link>Util\VKHttpRequestHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\Util\VKJTokenExtensions.cs">
+      <Link>Util\VKJTokenExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\Util\VKMD5.cs">
+      <Link>Util\VKMD5.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\Util\VKParametersRepository.cs">
+      <Link>Util\VKParametersRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\Util\VKUtil.cs">
+      <Link>Util\VKUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\VKAccessToken.cs">
+      <Link>VKAccessToken.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\VKEventArgs.cs">
+      <Link>VKEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\VKObject.cs">
+      <Link>VKObject.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\VKScope.cs">
+      <Link>VKScope.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
+    <VisualStudioVersion>12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetPlatformIdentifier)' == '' ">
+    <TargetPlatformIdentifier>WindowsPhoneApp</TargetPlatformIdentifier>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

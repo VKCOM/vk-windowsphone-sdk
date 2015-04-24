@@ -7,6 +7,7 @@ using System.Net;
 using System.Windows;
 using System.Windows.Resources;
 
+
 namespace VK.WindowsPhone.SDK.API.Networking
 {
     /// <summary>
