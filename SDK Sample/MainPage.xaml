@@ -31,7 +31,8 @@
                     <StackPanel x:Name="NotAuthorizedContent" Visibility="Collapsed">
                         <TextBlock x:Name="NoAuthInfoTextBlock" 
                                    Text="No access token stored"></TextBlock>
-                        <Button x:Name="AuthorizeButton" Content="Authenticate" Margin="0 12"></Button>
+                        <Button x:Name="AuthorizeButton" Content="Authenticate through web view" Margin="0 12"></Button>
+                        <Button x:Name="AuthorizeButton2" Content="Authenticate through app" Margin="0 12"></Button>
                     </StackPanel>
 
                     <StackPanel x:Name="AuthorizedContent" Visibility="Collapsed">

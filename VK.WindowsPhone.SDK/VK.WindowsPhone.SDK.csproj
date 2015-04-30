@@ -125,6 +125,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Localization\VKLocalizedStrings.cs" />
+    <Compile Include="LoginType.cs" />
     <Compile Include="Pages\VKCaptchaRequestControl.xaml.cs">
       <DependentUpon>VKCaptchaRequestControl.xaml</DependentUpon>
     </Compile>
@@ -146,10 +147,12 @@
     <Compile Include="Util\VKUtil.cs" />
     <Compile Include="VKAccessToken.cs" />
     <Compile Include="API\VKError.cs" />
+    <Compile Include="VKAppLaunchAuthorizationHelper.cs" />
     <Compile Include="VKEventArgs.cs" />
     <Compile Include="VKObject.cs" />
     <Compile Include="VKScope.cs" />
     <Compile Include="VKSDK.cs" />
+    <Compile Include="VKUriMapperHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Pages\VKCaptchaRequestControl.xaml">

@@ -30,6 +30,20 @@ namespace VK.WindowsPhone.SDK.Util
             return parameters;
         }
 
+        public static string GetParamsOfQueryString(string queryString)
+        {
+            int indOfQ = queryString.IndexOf('?');
+
+            if (indOfQ >= 0 && indOfQ < queryString.Length - 1)
+            {
+                var paramsString = queryString.Substring(indOfQ + 1);
+
+                return paramsString;
+            }
+
+            return "";
+        }
+
         /// <summary>
         /// Join parameters to map into string, usually query string
         /// </summary>

@@ -16,11 +16,25 @@ namespace VK.WindowsPhone.SDK
     {
         public const String SDK_VERSION = "0.9";
         public const String API_VERSION = "5.21";
-     
+
+
+        private static VKSDK _instance;
+
         /// <summary>
         /// SDK instance
         /// </summary>
-        internal static VKSDK Instance { get; private set; }
+        internal static VKSDK Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new VKSDK();
+                }
+                return _instance;
+            }
+            
+        }
 
         /// <summary>
         /// Access token for API-requests
@@ -55,9 +69,7 @@ namespace VK.WindowsPhone.SDK
                                     "If you don't have one, create a standalone app here: https://vk.com/editapp?act=create");
             }
 
-            if (Instance == null)
-                Instance = new VKSDK();
-
+        
 
             
 
@@ -117,7 +129,8 @@ namespace VK.WindowsPhone.SDK
         /// <param name="scopeList">List of permissions for your app</param>
         /// <param name="revoke">If true user will be allowed to logout and change user</param>
         /// <param name="forceOAuth">SDK will use only OAuth authorization via WebBrowser</param>
-        public static void Authorize(List<String> scopeList, bool revoke = false, bool forceOAuth = false)
+        public static void Authorize(List<String> scopeList, bool revoke = false, bool forceOAuth = false,
+            LoginType loginType = LoginType.WebView)
         {
             try
             {
@@ -137,7 +150,22 @@ namespace VK.WindowsPhone.SDK
                 scopeList.Add(VKScope.OFFLINE);
 
 
-            RootFrame.Navigate(new Uri(string.Format("/VK.WindowsPhone.SDK;component/Pages/VKLoginPage.xaml?Scopes={0}&Revoke={1}", string.Join(",", scopeList), revoke), UriKind.Relative));
+            switch (loginType)
+            {
+                case LoginType.VKApp:
+                    AuthorizeVKApp(scopeList, revoke);
+                    break;
+                default:
+                    RootFrame.Navigate(new Uri(string.Format("/VK.WindowsPhone.SDK;component/Pages/VKLoginPage.xaml?Scopes={0}&Revoke={1}", string.Join(",", scopeList), revoke), UriKind.Relative));
+                    break;
+            }
+
+            
+        }
+
+        private static void AuthorizeVKApp(List<string> scopeList, bool revoke)
+        {
+            VKAppLaunchAuthorizationHelper.AuthorizeVKApp("", VKSDK.Instance.CurrentAppID, scopeList, revoke);
         }
 
         public static void Publish(VKPublishInputData data)
@@ -207,14 +235,19 @@ namespace VK.WindowsPhone.SDK
         /// <param name="renew">Is token being renewed. Raises different event handlers (AccessTokenReceived or AccessTokenRenewed)</param>
         public static void SetAccessToken(VKAccessToken token, bool renew = false)
         {
-            Instance.AccessToken = token;
+            if (Instance.AccessToken == null ||
+                (Instance.AccessToken.AccessToken != token.AccessToken ||
+                 Instance.AccessToken.ExpiresIn != token.ExpiresIn))
+            {
+                Instance.AccessToken = token;
 
-            if (!renew)
-                AccessTokenReceived(null, new VKAccessTokenReceivedEventArgs { NewToken = token });
-            else
-                AccessTokenRenewed(null, new AccessTokenRenewedEventArgs { Token = token });
+                if (!renew)
+                    AccessTokenReceived(null, new VKAccessTokenReceivedEventArgs { NewToken = token });
+                else
+                    AccessTokenRenewed(null, new AccessTokenRenewedEventArgs { Token = token });
 
-            Instance.AccessToken.SaveTokenToIsolatedStorage(VKSDK_ACCESS_TOKEN_ISOLATEDSTORAGE_KEY);
+                Instance.AccessToken.SaveTokenToIsolatedStorage(VKSDK_ACCESS_TOKEN_ISOLATEDSTORAGE_KEY);
+            }
         }
 
         /// <summary>
