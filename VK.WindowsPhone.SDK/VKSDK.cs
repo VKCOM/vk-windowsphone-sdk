@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
+#if SILVERLIGHT
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
+#else
+
+#endif
 using VK.WindowsPhone.SDK.API;
 using VK.WindowsPhone.SDK.Pages;
 using VK.WindowsPhone.SDK.Util;
@@ -33,7 +37,7 @@ namespace VK.WindowsPhone.SDK
                 }
                 return _instance;
             }
-            
+
         }
 
         /// <summary>
@@ -69,9 +73,9 @@ namespace VK.WindowsPhone.SDK
                                     "If you don't have one, create a standalone app here: https://vk.com/editapp?act=create");
             }
 
-        
 
-            
+
+
 
             Instance.CurrentAppID = appId;
         }
@@ -94,7 +98,7 @@ namespace VK.WindowsPhone.SDK
         //    public static Action<ValidationUserRequest, Action<ValidationUserResponse>> ValidationRequest { private get; set; }
 
 
-    
+
         /// <summary>
         /// Invokes when existing token has expired
         /// </summary>
@@ -156,11 +160,22 @@ namespace VK.WindowsPhone.SDK
                     AuthorizeVKApp(scopeList, revoke);
                     break;
                 default:
+#if SILVERLIGHT
                     RootFrame.Navigate(new Uri(string.Format("/VK.WindowsPhone.SDK;component/Pages/VKLoginPage.xaml?Scopes={0}&Revoke={1}", string.Join(",", scopeList), revoke), UriKind.Relative));
+#else
+                    var loginUserControl = new VKLoginUserControl();
+
+                    loginUserControl.Scopes = scopeList;
+                    loginUserControl.Revoke = revoke;
+
+                    loginUserControl.ShowInPopup(Windows.UI.Xaml.Window.Current.Bounds.Width,
+                         Windows.UI.Xaml.Window.Current.Bounds.Height);
+
+#endif
                     break;
             }
 
-            
+
         }
 
         private static void AuthorizeVKApp(List<string> scopeList, bool revoke)
@@ -168,6 +183,7 @@ namespace VK.WindowsPhone.SDK
             VKAppLaunchAuthorizationHelper.AuthorizeVKApp("", VKSDK.Instance.CurrentAppID, scopeList, revoke);
         }
 
+#if SILVERLIGHT
         public static void Publish(VKPublishInputData data)
         {
             if (data == null)
@@ -179,7 +195,7 @@ namespace VK.WindowsPhone.SDK
 
             RootFrame.Navigate(new Uri(string.Format("/VK.WindowsPhone.SDK;component/Pages/VKPublishPage.xaml"), UriKind.Relative));
         }
-
+#endif
         private enum CheckTokenResult
         {
             None,
@@ -189,17 +205,19 @@ namespace VK.WindowsPhone.SDK
 
         private static void CheckConditions()
         {
-            if (Instance == null)
-                throw new Exception("VK SDK is not initialized. Use VKSDK.Initialize method first");
-
+#if SILVERLIGHT
             if (Application.Current.RootVisual as Frame == null)
                 throw new Exception("Application.Current.RootVisual is supposed to be PhoneApplicationFrame");
+
+#endif
         }
 
+#if SILVERLIGHT
         internal static PhoneApplicationFrame RootFrame
         {
             get { return (PhoneApplicationFrame)Application.Current.RootVisual; }
         }
+#endif
 
         /// <summary>
         /// Check new access token and assign as instance token 
@@ -217,7 +235,7 @@ namespace VK.WindowsPhone.SDK
 
                 var error = new VKError { error_code = (int)VKResultCode.UserAuthorizationFailed };
 
-                return CheckTokenResult.Error;                
+                return CheckTokenResult.Error;
             }
             else
             {
@@ -225,7 +243,7 @@ namespace VK.WindowsPhone.SDK
                 return CheckTokenResult.Success;
             }
 
-            
+
         }
 
         /// <summary>
@@ -322,7 +340,7 @@ namespace VK.WindowsPhone.SDK
         {
             get { return Instance.AccessToken != null && !Instance.AccessToken.IsExpired; }
         }
-      
+
 
         internal static void ProcessLoginResult(string result, bool wasValidating, Action<VKValidationResponse> validationCallback)
         {
@@ -330,7 +348,7 @@ namespace VK.WindowsPhone.SDK
 
             if (result == null)
             {
-                SetAccessTokenError(new VKError { error_code = (int)VKResultCode.UserAuthorizationFailed } );
+                SetAccessTokenError(new VKError { error_code = (int)VKResultCode.UserAuthorizationFailed });
             }
             else
             {
@@ -339,14 +357,16 @@ namespace VK.WindowsPhone.SDK
                 {
                     success = true;
                 }
+                else
+                {
+                    SetAccessTokenError(new VKError { error_code = (int)VKResultCode.UserAuthorizationFailed });
+                }
             }
 
             if (validationCallback != null)
             {
                 validationCallback(new VKValidationResponse { IsSucceeded = success });
             }
-
-           
         }
 
         internal static void InvokeCaptchaRequest(VKCaptchaUserRequest request, Action<VKCaptchaUserResponse> callback)
@@ -377,10 +397,21 @@ namespace VK.WindowsPhone.SDK
         {
             VKExecute.ExecuteOnUIThread(() =>
                 {
+#if SILVERLIGHT
                     VKParametersRepository.SetParameterForId("ValidationCallback", callback);
                     RootFrame.Navigate(new Uri(string.Format("/VK.WindowsPhone.SDK;component/Pages/VKLoginPage.xaml?ValidationUri={0}", HttpUtility.UrlEncode(request.ValidationUri)), UriKind.Relative));
+#else
+                    var loginUserControl = new VKLoginUserControl();
+
+                    loginUserControl.ValidationUri = request.ValidationUri;
+                    loginUserControl.ValidationCallback = callback;
+
+                    loginUserControl.ShowInPopup(Windows.UI.Xaml.Window.Current.Bounds.Width,
+                         Windows.UI.Xaml.Window.Current.Bounds.Height); 
+#endif
+
                 });
-            
+
         }
     }
 }

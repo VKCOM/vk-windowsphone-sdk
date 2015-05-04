@@ -3,10 +3,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+
 using System.Text;
 using System.Threading.Tasks;
 using VK.WindowsPhone.SDK.API;
+
+#if SILVERLIGHT
 using VK.WindowsPhone.SDK.API.Networking;
+
+#else
+
+
+using Windows.Web.Http;
+using Windows.Web.Http.Filters;
+
+#endif
 
 namespace VK.WindowsPhone.SDK.Util
 {
@@ -52,7 +63,7 @@ namespace VK.WindowsPhone.SDK.Util
             get { return VKSDK.Logger; }
         }
 
-        public static void DispatchHTTPRequest(
+        public static async void DispatchHTTPRequest(
             string baseUri,
             Dictionary<string, string> parameters,
             Action<VKHttpResult> resultCallback)
@@ -66,6 +77,8 @@ namespace VK.WindowsPhone.SDK.Util
 
             try
             {
+#if SILVERLIGHT
+
                 requestState.resultCallback = resultCallback;
 
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(baseUri);
@@ -100,21 +113,49 @@ namespace VK.WindowsPhone.SDK.Util
 
                 },
                 null);
+
+#else
+                
+                var filter = new HttpBaseProtocolFilter();
+                
+                filter.AutomaticDecompression = true;
+
+                var httpClient = new Windows.Web.Http.HttpClient(filter);
+                
+                HttpFormUrlEncodedContent content = new HttpFormUrlEncodedContent(parameters);
+                
+                var result = await httpClient.PostAsync(new Uri(baseUri, UriKind.Absolute),
+                    content);
+
+                var resultStr = await result.Content.ReadAsStringAsync();
+
+                SafeInvokeCallback(resultCallback, result.IsSuccessStatusCode, resultStr);
+
+#endif
+
             }
             catch (Exception exc)
             {
                 Logger.Error("VKHttpRequestHelper.DispatchHTTPRequest failed.", exc);
+#if SILVERLIGHT
                 SafeClose(requestState);
                 SafeInvokeCallback(requestState.resultCallback, false, null);
+#else
+                SafeInvokeCallback(resultCallback, false, null);
+#endif
+
             }
         }
 
-        public static void Upload(string uri, Stream data, string paramName, string uploadContentType,Action<VKHttpResult> resultCallback, Action<double> progressCallback = null, string fileName = null)
+        public static async void Upload(string uri, Stream data, string paramName, string uploadContentType,Action<VKHttpResult> resultCallback, Action<double> progressCallback = null, string fileName = null)
         {
+#if SILVERLIGHT
             var rState = new RequestState();
             rState.resultCallback = resultCallback;
+#endif
             try
             {
+#if SILVERLIGHT
                 var request = (HttpWebRequest)WebRequest.Create(uri);
             
                 request.AllowWriteStreamBuffering = false;
@@ -159,15 +200,45 @@ namespace VK.WindowsPhone.SDK.Util
                     }
 
                 }, null);
+#else
+
+                var httpClient = new Windows.Web.Http.HttpClient();
+                HttpMultipartFormDataContent content = new HttpMultipartFormDataContent();
+                content.Add(new HttpStreamContent(data.AsInputStream()), paramName, fileName ?? "myDataFile");
+                content.Headers.Add("Content-Type", uploadContentType);
+                var postAsyncOp =  httpClient.PostAsync(new Uri(uri, UriKind.Absolute),
+                    content);
+
+                postAsyncOp.Progress = (r, progress) =>
+                    {
+                        if (progressCallback != null && progress.TotalBytesToSend.HasValue && progress.TotalBytesToSend > 0)
+                        {
+                            progressCallback(((double)progress.BytesSent * 100) / progress.TotalBytesToSend.Value);
+                        }
+                    };
+
+
+                var result = await postAsyncOp;
+
+                var resultStr = await result.Content.ReadAsStringAsync();
+
+                SafeInvokeCallback(resultCallback, result.IsSuccessStatusCode, resultStr);
+#endif
             }
             catch (Exception exc)
             {
                 Logger.Error("VKHttpRequestHelper.Upload failed.", exc);
+#if SILVERLIGHT
                 SafeClose(rState);
-                SafeInvokeCallback(rState.resultCallback, false, null);
+                   SafeInvokeCallback(rState.resultCallback, false, null);
+#else
+                SafeInvokeCallback(resultCallback, false, null);
+#endif
+
             }
         }
 
+#if SILVERLIGHT
         private static void ResponseCallback(IAsyncResult asynchronousResult)
         {
             RequestState requestState = (RequestState)asynchronousResult.AsyncState;
@@ -274,6 +345,8 @@ namespace VK.WindowsPhone.SDK.Util
                 Logger.Error("VKHttpRequestHelper.SafeClose failed.", exc);
             }
         }
+#endif
+
 
         private static void SafeInvokeCallback(Action<VKHttpResult> action, bool p, string stringContent)
         {          

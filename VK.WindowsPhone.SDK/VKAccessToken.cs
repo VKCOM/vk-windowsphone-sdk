@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+#if SILVERLIGHT
 using System.IO.IsolatedStorage;
+#endif
 using VK.WindowsPhone.SDK.Util;
 
 namespace VK.WindowsPhone.SDK
@@ -51,11 +53,16 @@ namespace VK.WindowsPhone.SDK
         /// <param name="tokenKey">Your key for saving settings</param>
         public void SaveTokenToIsolatedStorage(String tokenKey)
         {
+#if SILVERLIGHT
             var iso = IsolatedStorageSettings.ApplicationSettings;
             
             var tokenData = SerializeTokenData();
 
-            iso[tokenKey] = tokenData;                     
+            iso[tokenKey] = tokenData;  
+#else
+
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values[tokenKey] = SerializeTokenData();
+#endif
         }
 
         /// <summary>
@@ -64,8 +71,12 @@ namespace VK.WindowsPhone.SDK
         /// <param name="tokenKey">Your key for saving settings</param>
         public static void RemoveTokenInIsolatedStorage(String tokenKey)
         {
+#if SILVERLIGHT
             var iso = IsolatedStorageSettings.ApplicationSettings;
             iso.Remove(tokenKey);
+#else
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values.Remove(tokenKey);
+#endif
         }
 
 
@@ -157,12 +168,23 @@ namespace VK.WindowsPhone.SDK
         /// <returns>Previously saved token or null</returns>
         public static VKAccessToken TokenFromIsolatedStorage(String tokenKey)
         {
+#if SILVERLIGHT
             var iso = IsolatedStorageSettings.ApplicationSettings;
             if (!iso.Contains(tokenKey)) return null;
 
             String tokenString = iso[tokenKey].ToString();
 
             return FromUrlString(tokenString);
+#else
+            if (!Windows.Storage.ApplicationData.Current.LocalSettings.Values.ContainsKey(tokenKey))
+            {
+                return null;
+            }
+
+            String tokenString = Windows.Storage.ApplicationData.Current.LocalSettings.Values[tokenKey].ToString();
+
+            return FromUrlString(tokenString);
+#endif
         }
 
         /// <summary>

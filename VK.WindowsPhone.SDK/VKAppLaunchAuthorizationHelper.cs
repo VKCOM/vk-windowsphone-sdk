@@ -23,7 +23,7 @@ namespace VK.WindowsPhone.SDK
             string redirectUri = await GetRedirectUri();
 
             var uriString = string.Format(_launchUriStrFrm,
-                HttpUtility.UrlEncode(state == null ? string.Empty : state),
+                WebUtility.UrlEncode(state == null ? string.Empty : state),
                 clientId,
                 StrUtil.GetCommaSeparated(scopeList),
                 revoke,
@@ -45,14 +45,11 @@ namespace VK.WindowsPhone.SDK
 
         internal async static Task<string> GetFilteredManifestAppAttributeValue(string node, string attribute, string prefix)
         {
-#if WINDOWS_UNIVERSAL
-            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///FacebookConfig.xml"));
-            using (Stream strm = await file.OpenStreamForReadAsync())
-#endif
 
-#if WINDOWS_PHONE
+
+#if SILVERLIGHT
             using (System.IO.Stream strm = Microsoft.Xna.Framework.TitleContainer.OpenStream("WMAppManifest.xml"))
-#endif
+
             {
                 var xml = XElement.Load(strm);
                 var filteredAttributeValue = (from app in xml.Descendants(node)
@@ -67,6 +64,10 @@ namespace VK.WindowsPhone.SDK
 
                 return filteredAttributeValue;
             }
+#else
+            //todo
+            return "";
+#endif
         }
     }
 }
