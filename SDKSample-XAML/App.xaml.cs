@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using VK.WindowsPhone.SDK_XAML;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -100,6 +101,18 @@ namespace SDKSample_XAML
             // Ensure the current window is active
             Window.Current.Activate();
         }
+
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            base.OnActivated(args);
+            if (args.Kind == ActivationKind.Protocol)
+            {
+                var protocolArgs = args as ProtocolActivatedEventArgs;
+                VKProtocolActivationHelper.HandleProtocolLaunch(protocolArgs);
+            }
+        }
+
+
 
         /// <summary>
         /// Restores the content transitions after the app has launched.

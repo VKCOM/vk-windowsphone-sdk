@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using VK.WindowsPhone.SDK.Util;
 using Windows.System;
+using System.IO;
 
 namespace VK.WindowsPhone.SDK
 {
@@ -46,10 +47,12 @@ namespace VK.WindowsPhone.SDK
         internal async static Task<string> GetFilteredManifestAppAttributeValue(string node, string attribute, string prefix)
         {
 
-
-#if SILVERLIGHT
+#if !SILVERLIGHT
+            var file = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///VKConfig.xml"));
+            using (Stream strm = await file.OpenStreamForReadAsync())
+#else
             using (System.IO.Stream strm = Microsoft.Xna.Framework.TitleContainer.OpenStream("WMAppManifest.xml"))
-
+#endif
             {
                 var xml = XElement.Load(strm);
                 var filteredAttributeValue = (from app in xml.Descendants(node)
@@ -64,10 +67,6 @@ namespace VK.WindowsPhone.SDK
 
                 return filteredAttributeValue;
             }
-#else
-            //todo
-            return "";
-#endif
         }
     }
 }

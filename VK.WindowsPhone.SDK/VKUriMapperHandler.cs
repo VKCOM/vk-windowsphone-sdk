@@ -39,6 +39,6 @@ namespace VK.WindowsPhone.SDK
                 }
             }
             return false;
-        }
+        }       
     }
 }

@@ -36,6 +36,7 @@ namespace SDKSample_XAML
         {
             this.InitializeComponent();
             AuthorizeButton.Click += AuthorizeButtonOnClick;
+            AuthorizeButton2.Click += AuthorizeButton2_Click;
             VKSDK.Initialize("4460217");
 
             VKSDK.AccessTokenReceived += (sender, args) =>
@@ -50,7 +51,7 @@ namespace SDKSample_XAML
             this.NavigationCacheMode = NavigationCacheMode.Required;
 
             UpdateUIState();
-        }
+        }    
 
         private void CaptchaRequest(VKCaptchaUserRequest captchaUserRequest, Action<VKCaptchaUserResponse> action)
         {       
@@ -94,6 +95,11 @@ namespace SDKSample_XAML
         private void AuthorizeButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
         {
             VKSDK.Authorize(_scope, false, false);
+        }
+
+        void AuthorizeButton2_Click(object sender, RoutedEventArgs e)
+        {
+            VKSDK.Authorize(_scope, false, false, LoginType.VKApp);
         }
 
 

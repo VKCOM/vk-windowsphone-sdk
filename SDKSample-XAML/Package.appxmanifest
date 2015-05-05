@@ -36,6 +36,11 @@
             <m3:DefaultTile Wide310x150Logo="Assets\WideLogo.png" Square71x71Logo="Assets\Square71x71Logo.png"/>
             <m3:SplashScreen Image="Assets\SplashScreen.png"/>
         </m3:VisualElements>
+      <Extensions>
+        <Extension Category="windows.protocol">
+          <Protocol Name="vkc6335216f-111e-4b92-bc92-80bc8581380b" m2:DesiredView="useLess"/>
+        </Extension>
+      </Extensions>
     </Application>
   </Applications>
   <Capabilities>
