@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.IsolatedStorage;
 using VK.WindowsPhone.SDK.Util;
 
 namespace VK.WindowsPhone.SDK

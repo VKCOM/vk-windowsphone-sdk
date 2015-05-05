@@ -6,12 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using VK.WindowsPhone.SDK.API;
-#if SILVERLIGHT
 using VK.WindowsPhone.SDK.API.Networking;
-#else
-using Windows.Web.Http;
-using Windows.Web.Http.Filters;
-#endif
 
 namespace VK.WindowsPhone.SDK.Util
 {
@@ -57,18 +52,16 @@ namespace VK.WindowsPhone.SDK.Util
             get { return VKSDK.Logger; }
         }
 
-       
-        public static async void DispatchHTTPRequest(
+        public static void DispatchHTTPRequest(
             string baseUri,
             Dictionary<string, string> parameters,
             Action<VKHttpResult> resultCallback)
         {
 
-
             Logger.Info(">>> VKHttpRequestHelper starting http request. baseUri = {0}; parameters = {1}", baseUri, GetAsLogString(parameters));
 
             var queryString = ConvertDictionaryToQueryString(parameters, true);
-#if SILVERLIGHT
+
             var requestState = new RequestState();
 
             try
@@ -114,30 +107,10 @@ namespace VK.WindowsPhone.SDK.Util
                 SafeClose(requestState);
                 SafeInvokeCallback(requestState.resultCallback, false, null);
             }
-#else
-
-            try
-            {
-                var filter = new HttpBaseProtocolFilter();
-                filter.AutomaticDecompression = true;
-                var httpClient = new HttpClient(filter);
-                var content = new HttpFormUrlEncodedContent(parameters);
-                var result = await httpClient.PostAsync(new Uri(baseUri), content);
-                var resultContent = await result.Content.ReadAsStringAsync();
-                SafeInvokeCallback(resultCallback, true, resultContent);
-            }
-            catch (Exception exc)
-            {
-                Logger.Error("VKHttpRequestHelper.DispatchHTTPRequest failed.", exc);
-                SafeInvokeCallback(resultCallback, false, null);
-            }
-
-#endif
         }
 
-        public static async void Upload(string uri, Stream data, string paramName, string uploadContentType,Action<VKHttpResult> resultCallback, Action<double> progressCallback = null, string fileName = null)
+        public static void Upload(string uri, Stream data, string paramName, string uploadContentType,Action<VKHttpResult> resultCallback, Action<double> progressCallback = null, string fileName = null)
         {
-#if SILVERLIGHT
             var rState = new RequestState();
             rState.resultCallback = resultCallback;
             try
@@ -193,37 +166,8 @@ namespace VK.WindowsPhone.SDK.Util
                 SafeClose(rState);
                 SafeInvokeCallback(rState.resultCallback, false, null);
             }
-
-#else
-
-            try
-            {
-                var filter = new HttpBaseProtocolFilter();
-                filter.AutomaticDecompression = true;
-
-                var httpClient = new HttpClient(filter);
-
-                var content = new HttpMultipartFormDataContent();
-                content.Add(new HttpStreamContent(data.AsInputStream()), paramName, fileName ?? "myDataFile");
-
-                var result = await httpClient.PostAsync(new Uri(uri), content);
-                
-                var resultContent = await result.Content.ReadAsStringAsync();
-                
-                SafeInvokeCallback(resultCallback, true, resultContent);
-            }
-            catch (Exception exc)
-            {
-                Logger.Error("VKHttpRequestHelper.DispatchHTTPRequest failed.", exc);
-                SafeInvokeCallback(resultCallback, false, null);
-            }
-
-#endif
-
-
         }
 
-#if SILVERLIGHT
         private static void ResponseCallback(IAsyncResult asynchronousResult)
         {
             RequestState requestState = (RequestState)asynchronousResult.AsyncState;
@@ -330,8 +274,6 @@ namespace VK.WindowsPhone.SDK.Util
                 Logger.Error("VKHttpRequestHelper.SafeClose failed.", exc);
             }
         }
-
-#endif
 
         private static void SafeInvokeCallback(Action<VKHttpResult> action, bool p, string stringContent)
         {          
