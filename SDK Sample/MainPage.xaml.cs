@@ -20,7 +20,7 @@ namespace SDK_Sample
         {
             InitializeComponent();
             AuthorizeButton.Click += AuthorizeButtonOnClick;
-   
+            AuthorizeButton2.Click += AuthorizeButton2OnClick;
             VKSDK.Initialize("4460217");
           
             VKSDK.AccessTokenReceived += (sender, args) =>
@@ -35,7 +35,6 @@ namespace SDK_Sample
             UpdateUIState();         
         }
 
-
         private void CaptchaRequest(VKCaptchaUserRequest captchaUserRequest, Action<VKCaptchaUserResponse> action)
         {
             this.Focus();
@@ -46,12 +45,18 @@ namespace SDK_Sample
             }
         }
 
-
-
         private void AuthorizeButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
         {
-            VKSDK.Authorize(_scope);
+            VKSDK.Authorize(_scope, false, false );
         }
+
+
+        private void AuthorizeButton2OnClick(object sender, RoutedEventArgs e)
+        {
+            VKSDK.Authorize(_scope, false, false, LoginType.VKApp);
+        }
+
+
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {

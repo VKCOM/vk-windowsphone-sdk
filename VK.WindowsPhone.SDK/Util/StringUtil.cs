@@ -22,7 +22,7 @@ namespace VK.WindowsPhone.SDK.Util
 
             res = res.Replace("\n", "\r\n");
 
-            res = HttpUtility.HtmlDecode(res);
+            res = WebUtility.HtmlDecode(res);
 
             return res.Trim();
         }

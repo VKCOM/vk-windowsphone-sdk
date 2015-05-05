@@ -29,6 +29,9 @@
         </TemplateFlip>
       </PrimaryToken>
     </Tokens>
+    <Extensions>
+      <Protocol Name="vkc5130dfdb-3c66-490b-8f50-d62b757efde5" NavUriFragment="encodedLaunchUri=%s" TaskID="_default" />
+    </Extensions>
     <ScreenResolutions>
       <ScreenResolution Name="ID_RESOLUTION_WVGA"/>
       <ScreenResolution Name="ID_RESOLUTION_WXGA"/>

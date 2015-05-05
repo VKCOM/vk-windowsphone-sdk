@@ -1,11 +1,26 @@
-﻿using Microsoft.Phone.Controls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+
+#if SILVERLIGHT
+
 using System.IO.IsolatedStorage;
+using Microsoft.Phone.Controls;
+
+#else
+
+using Windows.Storage;
+using System.Threading.Tasks;
+using Windows.Storage.Streams;
+using Windows.UI.Xaml.Controls;
+using Windows.Web.Http;
+
+#endif
+
 using System.Net;
 using VK.WindowsPhone.SDK.API.Model;
+
 
 namespace VK.WindowsPhone.SDK.Util
 {
@@ -30,6 +45,20 @@ namespace VK.WindowsPhone.SDK.Util
             return parameters;
         }
 
+        public static string GetParamsOfQueryString(string queryString)
+        {
+            int indOfQ = queryString.IndexOf('?');
+
+            if (indOfQ >= 0 && indOfQ < queryString.Length - 1)
+            {
+                var paramsString = queryString.Substring(indOfQ + 1);
+
+                return paramsString;
+            }
+
+            return "";
+        }
+
         /// <summary>
         /// Join parameters to map into string, usually query string
         /// </summary>
@@ -49,7 +78,7 @@ namespace VK.WindowsPhone.SDK.Util
             {
                 var value = entry.Value;
 
-                args.Add(String.Format("{0}={1}", entry.Key, isUri ? HttpUtility.UrlEncode(value.ToString()) : value.ToString()));
+                args.Add(String.Format("{0}={1}", entry.Key, isUri ? WebUtility.UrlEncode(value.ToString()) : value.ToString()));
             }
 
             return String.Join("&", args);
@@ -79,6 +108,8 @@ namespace VK.WindowsPhone.SDK.Util
         /// <returns>Contents of file</returns>
         public static String FileToString(String filename)
         {
+#if SILVERLIGHT
+
             String text;
 
             using (var iso = IsolatedStorageFile.GetUserStoreForApplication())
@@ -92,6 +123,20 @@ namespace VK.WindowsPhone.SDK.Util
             }
 
             return text;
+#else
+       
+            String text = "";
+
+            Task.Run(async () =>
+                {
+                    var file = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(filename);
+                    text = await Windows.Storage.FileIO.ReadTextAsync(file);
+                })
+                .Wait();
+
+            return text;
+
+#endif
         }
 
         /// <summary>
@@ -101,6 +146,7 @@ namespace VK.WindowsPhone.SDK.Util
         /// <param name="stringToWrite">String to save</param>
         public static void StringToFile(String filename, String stringToWrite)
         {
+#if SILVERLIGHT
             using (var iso = IsolatedStorageFile.GetUserStoreForApplication())
             {
                 using (IsolatedStorageFileStream file = iso.OpenFile(filename, FileMode.Create, FileAccess.Write))
@@ -111,6 +157,17 @@ namespace VK.WindowsPhone.SDK.Util
                     }
                 }
             }
+#else
+
+            Task.Run(async () =>
+                {
+                    var file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
+
+                    await Windows.Storage.FileIO.WriteTextAsync(file, stringToWrite);
+
+                }).Wait();
+#endif
+
         }
 
         private static readonly DateTime Jan1St1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -126,9 +183,22 @@ namespace VK.WindowsPhone.SDK.Util
 
         public static void ClearCookies()
         {
+#if SILVERLIGHT
+
             var webBrowser = new WebBrowser();
 
             webBrowser.ClearCookiesAsync();
+
+#else
+
+            Windows.Web.Http.Filters.HttpBaseProtocolFilter myFilter = new Windows.Web.Http.Filters.HttpBaseProtocolFilter();
+            var cookieManager = myFilter.CookieManager;
+            HttpCookieCollection myCookieJar = cookieManager.GetCookies(new Uri("https://vk.com"));
+            foreach (HttpCookie cookie in myCookieJar)
+            {
+                cookieManager.DeleteCookie(cookie);
+            }
+#endif
         }
     }
 }

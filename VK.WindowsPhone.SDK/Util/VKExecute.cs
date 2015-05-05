@@ -11,6 +11,7 @@ namespace VK.WindowsPhone.SDK.Util
     {
         public static void ExecuteOnUIThread(Action action)
         {
+#if SILVERLIGHT
             if (Deployment.Current.Dispatcher.CheckAccess())
             {
                 action();
@@ -19,6 +20,22 @@ namespace VK.WindowsPhone.SDK.Util
             {
                 Deployment.Current.Dispatcher.BeginInvoke(action);
             }
+#else
+            var d = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
+
+            if (d.HasThreadAccess)
+            {
+                action();
+            }
+            else
+            {
+                d.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                    () =>
+                    {
+                        action();
+                    });
+            }
+#endif
         }
     }
 }
