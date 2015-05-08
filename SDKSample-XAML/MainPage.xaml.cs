@@ -85,7 +85,7 @@ namespace SDKSample_XAML
 
         void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
         {
-            if (VKPopupControlBase.CurrentlyShownInstances.Count > 0 != null)
+            if (VKPopupControlBase.CurrentlyShownInstances.Count > 0)
             {
                 VKLoginUserControl.CurrentlyShownInstances.Last().IsShown = false;
                 e.Handled = true;

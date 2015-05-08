@@ -178,7 +178,7 @@ namespace VK.WindowsPhone.SDK.API
             {
                 action();
             }
-            catch (Exception exc)
+            catch (Exception)
             {
             }
         }

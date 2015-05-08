@@ -113,8 +113,7 @@ namespace VK.WindowsPhone.SDK.Pages
                "response_type=token&" +
                "revoke={4}",
                VKSDK.Instance.CurrentAppID, _scopes, REDIRECT_URL, VKSDK.API_VERSION, _revoke ? 1 : 0);
-
-            webView.NavigationFailed += BrowserOnNavigationFailed;
+      
             webView.NavigationStarting += BrowserOnNavigating;
             webView.NavigationCompleted += BrowserOnLoadCompleted;
 
@@ -123,9 +122,17 @@ namespace VK.WindowsPhone.SDK.Pages
 
         private void BrowserOnLoadCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
-            webView.NavigationCompleted -= BrowserOnLoadCompleted;
-            webView.Visibility = Visibility.Visible;
-            progressBar.Visibility = Visibility.Collapsed;
+            if (!args.IsSuccess)
+            {
+                progressBar.Visibility = Visibility.Collapsed;
+                errorTextBlock.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                webView.NavigationCompleted -= BrowserOnLoadCompleted;
+                webView.Visibility = Visibility.Visible;
+                progressBar.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void BrowserOnNavigating(WebView sender, WebViewNavigationStartingEventArgs args)
@@ -148,12 +155,6 @@ namespace VK.WindowsPhone.SDK.Pages
             {
                 VKSDK.ProcessLoginResult(null, _isValidating, _validationCallback);  
             }
-        }
-
-        private void BrowserOnNavigationFailed(object sender, WebViewNavigationFailedEventArgs e)
-        {
-            progressBar.Visibility = Visibility.Collapsed;
-            errorTextBlock.Visibility = Visibility.Visible;
         }
     }
 }
