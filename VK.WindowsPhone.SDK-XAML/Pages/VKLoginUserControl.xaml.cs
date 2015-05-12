@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
+using VK.WindowsPhone.SDK.Util;
 
 namespace VK.WindowsPhone.SDK.Pages
 {
@@ -112,7 +112,7 @@ namespace VK.WindowsPhone.SDK.Pages
                "v={3}&" +
                "response_type=token&" +
                "revoke={4}",
-               VKSDK.Instance.CurrentAppID, _scopes, REDIRECT_URL, VKSDK.API_VERSION, _revoke ? 1 : 0);
+               VKSDK.Instance.CurrentAppID, _scopes.GetCommaSeparated(), REDIRECT_URL, VKSDK.API_VERSION, _revoke ? 1 : 0);
       
             webView.NavigationStarting += BrowserOnNavigating;
             webView.NavigationCompleted += BrowserOnLoadCompleted;
