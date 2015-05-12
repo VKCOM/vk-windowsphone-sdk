@@ -95,7 +95,9 @@
     <Compile Include="API\Model\VKAttachment.cs" />
     <Compile Include="API\Model\VKAudio.cs" />
     <Compile Include="API\Model\VKChat.cs" />
+    <Compile Include="API\Model\VKCity.cs" />
     <Compile Include="API\Model\VKComment.cs" />
+    <Compile Include="API\Model\VKCountry.cs" />
     <Compile Include="API\Model\VKDocument.cs" />
     <Compile Include="API\Model\VKGeo.cs" />
     <Compile Include="API\Model\VKGroup.cs" />

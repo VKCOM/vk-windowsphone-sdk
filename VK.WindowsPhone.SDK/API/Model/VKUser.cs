@@ -70,9 +70,9 @@ namespace VK.WindowsPhone.SDK.API.Model
 
         public string bdate { get; set; }
 
-        public string city { get; set; }
+        public VKCity city { get; set; }
 
-        public string country { get; set; }
+        public VKCountry country { get; set; }
 
         public string home_town { get; set; }
 

@@ -59,8 +59,14 @@
     <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKChat.cs">
       <Link>API\Model\VKChat.cs</Link>
     </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKCity.cs">
+      <Link>API\Model\VKCity.cs</Link>
+    </Compile>
     <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKComment.cs">
       <Link>API\Model\VKComment.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKCountry.cs">
+      <Link>API\Model\VKCountry.cs</Link>
     </Compile>
     <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKDocument.cs">
       <Link>API\Model\VKDocument.cs</Link>

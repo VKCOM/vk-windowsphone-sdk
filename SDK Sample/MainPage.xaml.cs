@@ -86,7 +86,7 @@ namespace SDK_Sample
             VKRequest.Dispatch<List<VKUser>>(
                 new VKRequestParameters(
                     "users.get",
-                    "fields", "photo_200"),
+                    "fields", "photo_200, city, country"),
                 (res) =>
                 {
                     if (res.ResultCode == VKResultCode.Succeeded)
