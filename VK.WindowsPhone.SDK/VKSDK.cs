@@ -321,7 +321,20 @@ namespace VK.WindowsPhone.SDK
 
             if (!Instance.PerformTokenCheck(token)) return false;
             Instance.AccessToken = token;
+
+            if (token != null)
+            {
+                TrackStats();
+            }
+
             return true;
+        }
+
+        private static void TrackStats()
+        {
+            VKRequest trackVisitorRequest = new VKRequest("stats.trackVisitor");
+
+            trackVisitorRequest.Dispatch<object>((res) => { }, (jsonStr) => new Object());
         }
 
         /// <summary>

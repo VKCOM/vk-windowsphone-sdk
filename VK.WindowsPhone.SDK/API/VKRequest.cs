@@ -47,6 +47,7 @@ namespace VK.WindowsPhone.SDK.API
         public VKRequest(string methodName, params string[] parameters)
         {
             var vkParameters = new VKRequestParameters(methodName, parameters);
+            InitializeWith(vkParameters);
         }
 
         private void InitializeWith(VKRequestParameters parameters)
@@ -109,8 +110,12 @@ namespace VK.WindowsPhone.SDK.API
                     {
                         var backendResult = GetBackendResultFromString<T>(httpResult.Data, customDeserializationFunc);
 
-                       
-                        if (backendResult.ResultCode == VKResultCode.CaptchaRequired)
+                        if (backendResult.ResultCode == VKResultCode.UserAuthorizationFailed &&
+                            accessToken != null)
+                        {
+                            VKSDK.SetAccessTokenError(new VKError { error_code = (int)VKResultCode.UserAuthorizationFailed });
+                        }                                              
+                        else if (backendResult.ResultCode == VKResultCode.CaptchaRequired)
                         {
                             var captchaRequest = new VKCaptchaUserRequest
                             {
