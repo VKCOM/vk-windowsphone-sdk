@@ -198,6 +198,12 @@ namespace VK.WindowsPhone.SDK.Util
             {
                 cookieManager.DeleteCookie(cookie);
             }
+
+            myCookieJar = cookieManager.GetCookies(new Uri("https://login.vk.com"));
+            foreach (HttpCookie cookie in myCookieJar)
+            {
+                cookieManager.DeleteCookie(cookie);
+            }
 #endif
         }
     }
