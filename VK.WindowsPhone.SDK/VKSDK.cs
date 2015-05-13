@@ -369,11 +369,16 @@ namespace VK.WindowsPhone.SDK
                 if (CheckAndSetToken(tokenParams, wasValidating) == CheckTokenResult.Success)
                 {
                     success = true;
+
+                    if (!wasValidating)
+                    {
+                        TrackStats();
+                    }
                 }
                 else
                 {
                     SetAccessTokenError(new VKError { error_code = (int)VKResultCode.UserAuthorizationFailed });
-                }
+                }                
             }
 
             if (validationCallback != null)

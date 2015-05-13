@@ -97,7 +97,7 @@ namespace VK.WindowsPhone.SDK.Pages
         private void BrowserOnNavigating(object sender, NavigatingEventArgs args)
         {
             var url = args.Uri.AbsoluteUri;
-            if (url.StartsWith(REDIRECT_URL))
+            if (url.StartsWith(REDIRECT_URL) && !_processedResult)
             {
                 var result  = url.Substring(url.IndexOf('#') + 1);
 

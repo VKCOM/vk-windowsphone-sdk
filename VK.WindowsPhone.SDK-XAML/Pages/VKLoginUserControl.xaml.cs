@@ -113,7 +113,7 @@ namespace VK.WindowsPhone.SDK.Pages
                "response_type=token&" +
                "revoke={4}",
                VKSDK.Instance.CurrentAppID, _scopes.GetCommaSeparated(), REDIRECT_URL, VKSDK.API_VERSION, _revoke ? 1 : 0);
-      
+                  
             webView.NavigationStarting += BrowserOnNavigating;
             webView.NavigationCompleted += BrowserOnLoadCompleted;
 
@@ -138,7 +138,7 @@ namespace VK.WindowsPhone.SDK.Pages
         private void BrowserOnNavigating(WebView sender, WebViewNavigationStartingEventArgs args)
         {
             var url = args.Uri.AbsoluteUri;
-            if (url.StartsWith(REDIRECT_URL))
+            if (url.StartsWith(REDIRECT_URL) && !_processedResult)
             {
                 var result = url.Substring(url.IndexOf('#') + 1);
 
