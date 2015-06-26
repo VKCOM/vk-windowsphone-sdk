@@ -39,7 +39,10 @@ namespace VK.WindowsPhone.SDK.Util
             foreach (var keyValueString in keyValuePairs)
             {
                 var keyValueArray = keyValueString.Split('=');
-                parameters.Add(keyValueArray[0], keyValueArray[1]);
+                if (keyValueArray.Length == 2)
+                {
+                    parameters.Add(keyValueArray[0], keyValueArray[1]);
+                }
             }
 
             return parameters;
