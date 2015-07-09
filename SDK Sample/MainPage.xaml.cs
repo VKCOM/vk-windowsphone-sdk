@@ -21,14 +21,13 @@ namespace SDK_Sample
             InitializeComponent();
             AuthorizeButton.Click += AuthorizeButtonOnClick;
             AuthorizeButton2.Click += AuthorizeButton2OnClick;
-            VKSDK.Initialize("4460217");
+         
+            // VKSDK initialization is in App.xaml.cs
           
             VKSDK.AccessTokenReceived += (sender, args) =>
             {
                 UpdateUIState();
-            };
-
-            VKSDK.WakeUpSession();
+            };            
 
             VKSDK.CaptchaRequest = CaptchaRequest;
 
@@ -56,7 +55,12 @@ namespace SDK_Sample
             VKSDK.Authorize(_scope, false, false, LoginType.VKApp);
         }
 
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
 
+            UpdateUIState();
+        }
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {

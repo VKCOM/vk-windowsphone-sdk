@@ -6,6 +6,7 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using SDK_Sample.Resources;
+using VK.WindowsPhone.SDK;
 
 namespace SDK_Sample
 {
@@ -56,16 +57,27 @@ namespace SDK_Sample
 
         }
 
+        private void InitializeSDK()
+        {
+            VKSDK.Initialize("4460217");
+            VKSDK.WakeUpSession();
+        }
+
         // Code to execute when the application is launching (eg, from Start)
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
+            InitializeSDK();
         }
 
         // Code to execute when the application is activated (brought to foreground)
         // This code will not execute when the application is first launched
         private void Application_Activated(object sender, ActivatedEventArgs e)
         {
+            if (e.IsApplicationInstancePreserved == false)
+            {
+                InitializeSDK();
+            }
         }
 
         // Code to execute when the application is deactivated (sent to background)

@@ -18,7 +18,7 @@ namespace VK.WindowsPhone.SDK
 {
     public class VKSDK
     {
-        public const String SDK_VERSION = "0.9.3";
+        public const String SDK_VERSION = "1.0.0";
         public const String API_VERSION = "5.21";
 
 
@@ -50,6 +50,10 @@ namespace VK.WindowsPhone.SDK
         /// You shouldn't modify this key or value directly in IsolatedStorage.
         /// </summary>
         private const String VKSDK_ACCESS_TOKEN_ISOLATEDSTORAGE_KEY = "VKSDK_ACCESS_TOKEN_DONTTOUCH";
+
+        private static readonly string VK_NAVIGATE_STR_FRM = "/VK.WindowsPhone.SDK;component/Pages/VKLoginPage.xaml?Scopes={0}&Revoke={1}";
+
+        internal static readonly string VK_AUTH_STR_FRM = "https://oauth.vk.com/authorize?client_id={0}&scope={1}&redirect_uri={2}&display=mobile&v={3}&response_type=token&revoke={4}";
 
         /// <summary>
         /// Your VK app ID. 
@@ -157,11 +161,20 @@ namespace VK.WindowsPhone.SDK
             switch (loginType)
             {
                 case LoginType.VKApp:
+#if SILVERLIGHT
+#if DEBUG
+                    MessageBox.Show("Currently only the webview authentication is supported for Silverlight apps.");
+#endif
+
+                    // do not currently support vk app authorization
+                    RootFrame.Navigate(new Uri(string.Format(VK_NAVIGATE_STR_FRM, string.Join(",", scopeList), revoke), UriKind.Relative));
+#else
                     AuthorizeVKApp(scopeList, revoke);
+#endif                    
                     break;
                 default:
 #if SILVERLIGHT
-                    RootFrame.Navigate(new Uri(string.Format("/VK.WindowsPhone.SDK;component/Pages/VKLoginPage.xaml?Scopes={0}&Revoke={1}", string.Join(",", scopeList), revoke), UriKind.Relative));
+                    RootFrame.Navigate(new Uri(string.Format(VK_NAVIGATE_STR_FRM, string.Join(",", scopeList), revoke), UriKind.Relative));
 #else
                     var loginUserControl = new VKLoginUserControl();
 

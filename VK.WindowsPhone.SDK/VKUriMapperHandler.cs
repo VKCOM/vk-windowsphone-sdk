@@ -27,8 +27,10 @@ namespace VK.WindowsPhone.SDK
 
                         var launchUriDecoded = WebUtility.UrlDecode(launchUriEncoded);
 
-                        if (launchUriDecoded.StartsWith("vkc") && launchUriDecoded.Contains("://authorize"))
+                        if (launchUriDecoded.StartsWith("vk") && launchUriDecoded.Contains("://authorize"))
                         {
+                            launchUriDecoded = launchUriDecoded.Replace("authorize/#", "authorize/?");
+
                             var innerQueryParamsString = VKUtil.GetParamsOfQueryString(launchUriDecoded);
 
                             VKSDK.ProcessLoginResult(innerQueryParamsString, false, null);

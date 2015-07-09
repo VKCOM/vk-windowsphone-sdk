@@ -69,16 +69,12 @@ namespace VK.WindowsPhone.SDK.Pages
 
         private void InitializeWebBrowser()
         {           
-            var urlToLoad = _urlToLoad ??  string.Format(
-               "https://oauth.vk.com/authorize?" +
-               "client_id={0}&" +
-               "scope={1}&" +
-               "redirect_uri={2}&" +
-               "display=mobile&" +
-               "v={3}&" +
-               "response_type=token&" +
-               "revoke={4}",
-               VKSDK.Instance.CurrentAppID, _scopes, REDIRECT_URL, VKSDK.API_VERSION, _revoke ? 1 : 0);
+            var urlToLoad = _urlToLoad ??  string.Format(VKSDK.VK_AUTH_STR_FRM,
+               VKSDK.Instance.CurrentAppID,
+               _scopes, 
+               REDIRECT_URL,
+               VKSDK.API_VERSION, 
+               _revoke ? 1 : 0);
 
             webBrowser.NavigationFailed += BrowserOnNavigationFailed;
             webBrowser.Navigating += BrowserOnNavigating;

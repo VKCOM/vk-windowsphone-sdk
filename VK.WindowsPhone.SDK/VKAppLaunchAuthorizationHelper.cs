@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using VK.WindowsPhone.SDK.Util;
 using Windows.System;
 using System.IO;
+using System.Windows;
 
 namespace VK.WindowsPhone.SDK
 {
@@ -30,7 +31,29 @@ namespace VK.WindowsPhone.SDK
                 revoke,
                 redirectUri);
 
-            await Launcher.LaunchUriAsync(new Uri(uriString));
+            var fallbackUri = string.Format(VKSDK.VK_AUTH_STR_FRM,
+                VKSDK.Instance.CurrentAppID,
+               scopeList.GetCommaSeparated(),
+               WebUtility.UrlEncode("vk" + clientId + "://authorize" ),
+               VKSDK.API_VERSION, 
+               revoke ? 1 : 0);
+
+            try
+            {
+
+                await Launcher.LaunchUriAsync(new Uri(uriString), new LauncherOptions() { FallbackUri = new Uri(fallbackUri) });
+
+            }
+            catch (Exception)
+            {
+      
+#if SILVERLIGHT
+                var msg = "VK App authorization is not supported for this type of the project. Please, use WebView authorization.";
+                MessageBox.Show(msg);
+#endif
+            }
+
+
         }
 
         private static async Task<string> GetRedirectUri()
@@ -40,7 +63,7 @@ namespace VK.WindowsPhone.SDK
 
         async private static Task<string> GetVKLoginCallbackSchemeName()
         {
-            string result = await GetFilteredManifestAppAttributeValue("Protocol", "Name", "vkc");
+            string result = await GetFilteredManifestAppAttributeValue("Protocol", "Name", "vk");
             return result;
         }
 

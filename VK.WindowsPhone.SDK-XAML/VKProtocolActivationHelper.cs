@@ -13,9 +13,12 @@ namespace VK.WindowsPhone.SDK_XAML
     {
          public static void HandleProtocolLaunch(ProtocolActivatedEventArgs protocolArgs)
          {
-             if (protocolArgs.Uri.OriginalString.StartsWith("vkc") && protocolArgs.Uri.OriginalString.Contains("://authorize"))
+             if (protocolArgs.Uri.OriginalString.StartsWith("vk") && protocolArgs.Uri.OriginalString.Contains("://authorize"))
              {
-                 var innerQueryParamsString = VKUtil.GetParamsOfQueryString(protocolArgs.Uri.ToString());
+                 var launchUriDecoded = protocolArgs.Uri.ToString();
+                 launchUriDecoded = launchUriDecoded.Replace("authorize/#", "authorize/?");
+
+                 var innerQueryParamsString = VKUtil.GetParamsOfQueryString(launchUriDecoded);
 
                  VKSDK.ProcessLoginResult(innerQueryParamsString, false, null);
              }
