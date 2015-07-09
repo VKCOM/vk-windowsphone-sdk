@@ -21,38 +21,22 @@ using Windows.UI.Xaml.Navigation;
 
 namespace SDKSample_XAML
 {
-    /// <summary>
-    /// Provides application-specific behavior to supplement the default Application class.
-    /// </summary>
-    public sealed partial class App : Application
+   sealed partial class App : Application
     {
-        private TransitionCollection transitions;
+
 
         /// <summary>
-        /// Initializes the singleton application object.  This is the first line of authored code
+        /// Initializes the singleton Application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App()
         {
             this.InitializeComponent();
-            this.Suspending += this.OnSuspending;
+            this.Suspending += OnSuspending;
         }
 
-        /// <summary>
-        /// Invoked when the application is launched normally by the end user.  Other entry points
-        /// will be used when the application is launched to open a specific file, to display
-        /// search results, and so forth.
-        /// </summary>
-        /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        private Frame CreateRootFrame()
         {
-#if DEBUG
-            if (System.Diagnostics.Debugger.IsAttached)
-            {
-                this.DebugSettings.EnableFrameRateCounter = true;
-            }
-#endif
-
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -62,68 +46,90 @@ namespace SDKSample_XAML
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
 
-                // TODO: change this value to a cache size that is appropriate for your application
-                rootFrame.CacheSize = 1;
+                // Set the default language
+                rootFrame.Language = Windows.Globalization.ApplicationLanguages.Languages[0];
+                rootFrame.NavigationFailed += OnNavigationFailed;
 
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    // TODO: Load state from previously suspended application
-                }
+                SuspensionManager.RegisterFrame(rootFrame, "AppFrame");
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
             }
 
-            if (rootFrame.Content == null)
+            return rootFrame;
+        }
+
+        private async void RestoreStatus(ApplicationExecutionState previousExecutionState)
+        {
+            // Do not repeat app initialization when the Window already has content,
+            // just ensure that the window is active
+            if (previousExecutionState == ApplicationExecutionState.Terminated)
             {
-                // Removes the turnstile navigation for startup.
-                if (rootFrame.ContentTransitions != null)
+                // Restore the saved session state only when appropriate
+                try
                 {
-                    this.transitions = new TransitionCollection();
-                    foreach (var c in rootFrame.ContentTransitions)
-                    {
-                        this.transitions.Add(c);
-                    }
+                    await SuspensionManager.RestoreAsync();
                 }
-
-                rootFrame.ContentTransitions = null;
-                rootFrame.Navigated += this.RootFrame_FirstNavigated;
-
-                // When the navigation stack isn't restored navigate to the first page,
-                // configuring the new page by passing required information as a navigation
-                // parameter
-                if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
+                catch (SuspensionManagerException)
                 {
-                    throw new Exception("Failed to create initial page");
+                    //Something went wrong restoring state.
+                    //Assume there is no state and continue
                 }
             }
+        }
+
+        /// <summary>
+        /// Invoked when the application is launched normally by the end user.  Other entry points
+        /// will be used such as when the application is launched to open a specific file.
+        /// </summary>
+        /// <param name="e">Details about the launch request and process.</param>
+        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        {
+            Frame rootFrame = CreateRootFrame();
+            RestoreStatus(e.PreviousExecutionState);
+
+            //MainPage is always in rootFrame so we don't have to worry about restoring the navigation state on resume
+            rootFrame.Navigate(typeof(MainPage), e.Arguments);
 
             // Ensure the current window is active
             Window.Current.Activate();
         }
 
-        protected override void OnActivated(IActivatedEventArgs args)
+        /// <summary>
+        /// Invoked when Navigation to a certain page fails
+        /// </summary>
+        /// <param name="sender">The Frame which failed navigation</param>
+        /// <param name="e">Details about the navigation failure</param>
+        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
-            base.OnActivated(args);
-            if (args.Kind == ActivationKind.Protocol)
-            {
-                var protocolArgs = args as ProtocolActivatedEventArgs;
-                VKProtocolActivationHelper.HandleProtocolLaunch(protocolArgs);
-            }
+            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
-
-
+      
 
         /// <summary>
-        /// Restores the content transitions after the app has launched.
+        // Handle protocol activations and continuation activations.
         /// </summary>
-        /// <param name="sender">The object where the handler is attached.</param>
-        /// <param name="e">Details about the navigation event.</param>
-        private void RootFrame_FirstNavigated(object sender, NavigationEventArgs e)
+        protected override void OnActivated(IActivatedEventArgs e)
         {
-            var rootFrame = sender as Frame;
-            rootFrame.ContentTransitions = this.transitions ?? new TransitionCollection() { new NavigationThemeTransition() };
-            rootFrame.Navigated -= this.RootFrame_FirstNavigated;
+            if (e.Kind == ActivationKind.Protocol)
+            {
+                ProtocolActivatedEventArgs protocolArgs = e as ProtocolActivatedEventArgs;
+                Frame rootFrame = CreateRootFrame();
+                RestoreStatus(e.PreviousExecutionState);
+
+                if (rootFrame.Content == null)
+                {
+                    if (!rootFrame.Navigate(typeof(MainPage)))
+                    {
+                        throw new Exception("Failed to create initial page");
+                    }
+                }
+
+                VKProtocolActivationHelper.HandleProtocolLaunch(protocolArgs);
+
+                // Ensure the current window is active
+                Window.Current.Activate();
+            }
         }
 
         /// <summary>
@@ -133,12 +139,12 @@ namespace SDKSample_XAML
         /// </summary>
         /// <param name="sender">The source of the suspend request.</param>
         /// <param name="e">Details about the suspend request.</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
+        private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-
-            // TODO: Save application state and stop any background activity
+            await SuspensionManager.SaveAsync();
             deferral.Complete();
         }
     }
+      
 }
