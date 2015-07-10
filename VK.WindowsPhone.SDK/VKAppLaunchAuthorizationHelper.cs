@@ -14,7 +14,7 @@ namespace VK.WindowsPhone.SDK
 {
     public static class VKAppLaunchAuthorizationHelper
     {
-        private static readonly string _launchUriStrFrm = @"vkconnect://authorize?State={0}&ClientId={1}&Scope={2}&Revoke={3}&RedirectUri={4}";
+        private static readonly string _launchUriStrFrm = @"vkappconnect://authorize?State={0}&ClientId={1}&Scope={2}&Revoke={3}&RedirectUri={4}";
 
         public static async Task AuthorizeVKApp(
             string state,
