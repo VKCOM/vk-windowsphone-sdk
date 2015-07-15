@@ -98,7 +98,10 @@ namespace VK.WindowsPhone.SDK.Util
             var result = new Dictionary<String, string>();
             for (int i = 0; i + 1 < args.Length; i += 2)
             {
-                result.Add((String)args[i], args[i + 1]);
+                if (!string.IsNullOrEmpty(args[i + 1]))
+                {
+                    result.Add((String)args[i], args[i + 1]);
+                }
             }
 
             return result;

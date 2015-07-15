@@ -21,6 +21,8 @@ namespace VK.WindowsPhone.SDK
         public const String SDK_VERSION = "1.1.0";
         public const String API_VERSION = "5.21";
 
+        private static readonly string PLATFORM_ID = "winphone";
+
 
         private static VKSDK _instance;
 
@@ -60,6 +62,19 @@ namespace VK.WindowsPhone.SDK
         /// If you don't have one, create a standalone app here: https://vk.com/editapp?act=create 
         /// </summary>
         internal String CurrentAppID;
+
+        private static string DeviceId
+        {
+            get
+            {
+#if SILVERLIGHT                                
+                return "";
+                
+#else
+                return Windows.System.UserProfile.AdvertisingManager.AdvertisingId;
+#endif
+            }
+        }
 
         /// <summary>
         /// Initialize SDK
@@ -330,24 +345,52 @@ namespace VK.WindowsPhone.SDK
 
         public static bool WakeUpSession()
         {
+            bool result = true;
+
             var token = VKAccessToken.TokenFromIsolatedStorage(VKSDK_ACCESS_TOKEN_ISOLATEDSTORAGE_KEY);
 
-            if (!Instance.PerformTokenCheck(token)) return false;
-            Instance.AccessToken = token;
-
-            if (token != null)
+            if (!Instance.PerformTokenCheck(token))
             {
-                TrackStats();
+                result = false;
+            }
+            else
+            {
+                Instance.AccessToken = token;
             }
 
-            return true;
+            TrackStats();
+
+            return result;
         }
 
         private static void TrackStats()
         {
-            VKRequest trackVisitorRequest = new VKRequest("stats.trackVisitor");
+            long appId = 0;
+            bool appIdParsed = long.TryParse(Instance.CurrentAppID, out appId);
 
-            trackVisitorRequest.Dispatch<object>((res) => { }, (jsonStr) => new Object());
+            if (Instance.AccessToken != null)
+            {
+                VKRequest checkUserInstallRequest = new VKRequest("apps.checkUserInstall", "platform", PLATFORM_ID, "app_id", appId.ToString(), "device_id", DeviceId);
+
+                checkUserInstallRequest.Dispatch<object>((res) =>
+                    {
+                        VKRequest trackVisitorRequest = new VKRequest("stats.trackVisitor");
+
+                        trackVisitorRequest.Dispatch<object>((res2) => { }, (jsonStr) => new Object());
+
+                    },
+                    (jsonStr) => new Object());                
+            }
+            else
+            {                
+                if (!string.IsNullOrEmpty(DeviceId) && appIdParsed)
+                {
+                    VKRequest checkUserInstallRequest = new VKRequest("apps.checkUserInstall", "platform", PLATFORM_ID, "app_id", appId.ToString(), "device_id", DeviceId);
+
+                    checkUserInstallRequest.Dispatch<object>((res) => { }, (jsonStr) => new Object());
+                }
+            }
+
         }
 
         /// <summary>

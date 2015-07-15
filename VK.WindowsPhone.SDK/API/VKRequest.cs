@@ -9,7 +9,14 @@ using VK.WindowsPhone.SDK.Util;
 namespace VK.WindowsPhone.SDK.API
 {
 
-        
+    public class VKExecuteRequest : VKRequest
+    {
+        public VKExecuteRequest(string executeCode)
+            : base("execute", "code", executeCode)
+        {
+        }
+    }
+     
     public class VKRequest
     {
         class ErrorRoot
