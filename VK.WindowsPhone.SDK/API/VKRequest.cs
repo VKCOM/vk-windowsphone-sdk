@@ -35,6 +35,8 @@ namespace VK.WindowsPhone.SDK.API
             get { return VKSDK.Logger; }
         }
 
+
+     
         public static VKRequest Dispatch<T>(VKRequestParameters parameters,
             Action<VKBackendResult<T>> callback,
             Func<string, T> customDeserializationFunc = null)
@@ -65,7 +67,22 @@ namespace VK.WindowsPhone.SDK.API
             }
 
             _parameters = parameters;
-        }       
+        }
+
+        public Task<VKBackendResult<T>> DispatchAsync<T>(Func<string, T> customDeserializationFunc = null)
+        {
+                var tc = new TaskCompletionSource<VKBackendResult<T>>();
+
+                Dispatch(
+                    (res) =>
+                    {
+                        tc.TrySetResult(res);
+                    },
+
+                    customDeserializationFunc);
+
+                return tc.Task;
+        }
 
         public void Dispatch<T>(
             Action<VKBackendResult<T>> callback,

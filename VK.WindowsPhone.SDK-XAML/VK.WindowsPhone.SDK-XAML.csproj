@@ -167,6 +167,9 @@
     <Compile Include="..\VK.WindowsPhone.SDK\VKAppLaunchAuthorizationHelper.cs">
       <Link>VKAppLaunchAuthorizationHelper.cs</Link>
     </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\VKAppPlatform.cs">
+      <Link>VKAppPlatform.cs</Link>
+    </Compile>
     <Compile Include="..\VK.WindowsPhone.SDK\VKEventArgs.cs">
       <Link>VKEventArgs.cs</Link>
     </Compile>

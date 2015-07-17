@@ -150,6 +150,7 @@
     <Compile Include="VKAccessToken.cs" />
     <Compile Include="API\VKError.cs" />
     <Compile Include="VKAppLaunchAuthorizationHelper.cs" />
+    <Compile Include="VKAppPlatform.cs" />
     <Compile Include="VKEventArgs.cs" />
     <Compile Include="VKObject.cs" />
     <Compile Include="VKScope.cs" />

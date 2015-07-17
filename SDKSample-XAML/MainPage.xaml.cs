@@ -9,6 +9,8 @@ using VK.WindowsPhone.SDK.API.Model;
 using VK.WindowsPhone.SDK.Pages;
 using VK.WindowsPhone.SDK.Util;
 using VK.WindowsPhone.SDK_XAML.Pages;
+using Windows.ApplicationModel;
+using Windows.ApplicationModel.Store;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Phone.UI.Input;
@@ -173,6 +175,32 @@ namespace SDKSample_XAML
         private void Publish_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private async void BuyButton_Click(object sender, RoutedEventArgs e)
+        {
+            var proxyFolder = await Package.Current.InstalledLocation.GetFolderAsync("Assets");
+            var proxyFile = await proxyFolder.GetFileAsync("WindowsStoreProxy.xml");
+            await CurrentAppSimulator.ReloadSimulatorAsync(proxyFile);
+
+
+            try
+            {
+                var listing = await CurrentAppSimulator.LoadListingInformationAsync();
+
+                var product = listing.ProductListings["product1"];                
+
+                var results = await CurrentAppSimulator.RequestProductPurchaseAsync("product1");
+
+                if (results.Status == ProductPurchaseStatus.Succeeded)
+                {
+                    VKAppPlatform.Instance.ReportInAppPurchase(new VKAppPlatform.InAppPurchaseData(results.ReceiptXml, product.FormattedPrice));
+                }
+            }
+            catch (Exception exc)
+            {
+                /* Handle exception */
+            }
         }
     }
 }
