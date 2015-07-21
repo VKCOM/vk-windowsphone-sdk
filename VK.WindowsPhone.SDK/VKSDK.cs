@@ -18,7 +18,7 @@ namespace VK.WindowsPhone.SDK
 {
     public class VKSDK
     {
-        public const String SDK_VERSION = "1.2.0";
+        public const String SDK_VERSION = "1.2.1";
         public const String API_VERSION = "5.21";
 
         private static readonly string PLATFORM_ID = "winphone";
@@ -142,6 +142,11 @@ namespace VK.WindowsPhone.SDK
         /// Invokes when access token has been renewed (e.g. user passed validation)
         /// </summary>
         public static event EventHandler<AccessTokenRenewedEventArgs> AccessTokenRenewed = delegate { };
+
+        /// <summary>
+        /// Invoked if current app installation is the installation from the VK mobile games catalog
+        /// </summary>
+        public static event EventHandler MobileCatalogInstallationDetected = delegate { };
 
         public static IVKLogger Logger;
 
@@ -374,12 +379,24 @@ namespace VK.WindowsPhone.SDK
 
                 checkUserInstallRequest.Dispatch<object>((res) =>
                     {
+                        int responseVal = 0;
+
+                        if (res.Data != null && int.TryParse(res.Data.ToString(), out responseVal))
+                        {
+                            if (responseVal == 1)
+                            {
+                                if (MobileCatalogInstallationDetected != null)
+                                {
+                                    MobileCatalogInstallationDetected(null, EventArgs.Empty);
+                                }
+                            }
+                        }                        
+
                         VKRequest trackVisitorRequest = new VKRequest("stats.trackVisitor");
 
                         trackVisitorRequest.Dispatch<object>((res2) => { }, (jsonStr) => new Object());
 
-                    },
-                    (jsonStr) => new Object());                
+                    });                
             }
             else
             {                
