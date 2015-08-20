@@ -114,7 +114,11 @@ namespace VK.WindowsPhone.SDK.API
             Action<VKBackendResult<T>> callback,
             Func<string, T> customDeserializationFunc = null)
         {
-            parametersDict["v"] = VKSDK.API_VERSION;
+
+            if (!parametersDict.ContainsKey("v"))
+            {
+                parametersDict["v"] = VKSDK.API_VERSION;
+            }
 
             var accessToken = VKSDK.GetAccessToken();
 
