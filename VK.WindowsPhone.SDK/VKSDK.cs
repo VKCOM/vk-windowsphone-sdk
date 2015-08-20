@@ -18,7 +18,7 @@ namespace VK.WindowsPhone.SDK
 {
     public class VKSDK
     {
-        public const String SDK_VERSION = "1.2.2";
+        public const String SDK_VERSION = "1.2.3";
         public const String API_VERSION = "5.21";
 
         private static readonly string PLATFORM_ID = "winphone";
@@ -404,9 +404,60 @@ namespace VK.WindowsPhone.SDK
                 {
                     VKRequest checkUserInstallRequest = new VKRequest("apps.checkUserInstall", "platform", PLATFORM_ID, "app_id", appId.ToString(), "device_id", DeviceId);
 
-                    checkUserInstallRequest.Dispatch<object>((res) => { }, (jsonStr) => new Object());
+                    checkUserInstallRequest.Dispatch<object>((res) =>
+                    {
+                        int responseVal = 0;
+
+                        if (res.Data != null && int.TryParse(res.Data.ToString(), out responseVal))
+                        {
+                            if (responseVal == 1)
+                            {
+                                if (MobileCatalogInstallationDetected != null)
+                                {
+                                    MobileCatalogInstallationDetected(null, EventArgs.Empty);
+                                }
+                            }
+                        }
+                    });                
                 }
             }
+
+        }
+
+
+        public static void CheckMobileCatalogInstallation(Action<bool> resultCallback)
+        {
+            VKRequest checkUserInstallRequest = null;
+            long appId = 0;
+            bool appIdParsed = long.TryParse(Instance.CurrentAppID, out appId);
+            if (Instance.AccessToken != null)
+            {
+                checkUserInstallRequest = new VKRequest("apps.checkUserInstall", "platform", PLATFORM_ID, "app_id", appId.ToString(), "device_id", DeviceId);
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(DeviceId) && appIdParsed)
+                {
+                    checkUserInstallRequest = new VKRequest("apps.checkUserInstall", "platform", PLATFORM_ID, "app_id", appId.ToString(), "device_id", DeviceId);
+                }
+                else
+                {
+                    resultCallback(false);
+                    return;
+                }
+            }
+
+            checkUserInstallRequest.Dispatch<object>((res) =>
+            {
+                int responseVal = 0;
+
+                if (res.Data != null)
+                {
+                    int.TryParse(res.Data.ToString(), out responseVal);
+                }
+
+                resultCallback(responseVal == 1);
+            });                
 
         }
 
