@@ -58,7 +58,9 @@ namespace VK.WindowsPhone.SDK
             
             var tokenData = SerializeTokenData();
 
-            iso[tokenKey] = tokenData;  
+            iso[tokenKey] = tokenData;
+
+            iso.Save();
 #else
 
             Windows.Storage.ApplicationData.Current.LocalSettings.Values[tokenKey] = SerializeTokenData();

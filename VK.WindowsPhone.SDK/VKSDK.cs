@@ -18,7 +18,7 @@ namespace VK.WindowsPhone.SDK
 {
     public class VKSDK
     {
-        public const String SDK_VERSION = "1.2.3";
+        public const String SDK_VERSION = "1.2.4";
         public const String API_VERSION = "5.21";
 
         private static readonly string PLATFORM_ID = "winphone";
