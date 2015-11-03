@@ -18,7 +18,7 @@ namespace VK.WindowsPhone.SDK
 {
     public class VKSDK
     {
-        public const String SDK_VERSION = "1.2.4";
+        public const String SDK_VERSION = "1.2.5";
         public const String API_VERSION = "5.21";
 
         private static readonly string PLATFORM_ID = "winphone";
@@ -181,16 +181,9 @@ namespace VK.WindowsPhone.SDK
             switch (loginType)
             {
                 case LoginType.VKApp:
-#if SILVERLIGHT
-#if DEBUG
-                    MessageBox.Show("Currently only the webview authentication is supported for Silverlight apps.");
-#endif
 
-                    // do not currently support vk app authorization
-                    RootFrame.Navigate(new Uri(string.Format(VK_NAVIGATE_STR_FRM, string.Join(",", scopeList), revoke), UriKind.Relative));
-#else
                     AuthorizeVKApp(scopeList, revoke);
-#endif                    
+        
                     break;
                 default:
 #if SILVERLIGHT
