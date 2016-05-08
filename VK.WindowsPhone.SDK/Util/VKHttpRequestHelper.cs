@@ -57,7 +57,6 @@ namespace VK.WindowsPhone.SDK.Util
             }
         }
 
-
         private static IVKLogger Logger
         {
             get { return VKSDK.Logger; }
@@ -161,7 +160,7 @@ namespace VK.WindowsPhone.SDK.Util
                 request.AllowWriteStreamBuffering = false;
                 rState.request = request;
                 request.Method = "POST";
-                string formDataBoundary = String.Format("----------{0:N}", Guid.NewGuid());
+                string formDataBoundary = string.Format("----------{0:N}", Guid.NewGuid());
                 string contentType = "multipart/form-data; boundary=" + formDataBoundary;
                 request.ContentType = contentType;
                 request.CookieContainer = new CookieContainer();
@@ -230,11 +229,10 @@ namespace VK.WindowsPhone.SDK.Util
                 Logger.Error("VKHttpRequestHelper.Upload failed.", exc);
 #if SILVERLIGHT
                 SafeClose(rState);
-                   SafeInvokeCallback(rState.resultCallback, false, null);
+                SafeInvokeCallback(rState.resultCallback, false, null);
 #else
                 SafeInvokeCallback(resultCallback, false, null);
 #endif
-
             }
         }
 
@@ -261,15 +259,13 @@ namespace VK.WindowsPhone.SDK.Util
             {
                 Logger.Error(string.Format("VKHttpRequestHelper.ResponseCallback failed. Got httpWebResponse = {0} , uri = {1}", ex.Response is HttpWebResponse, requestState.request.RequestUri), ex);
 
-                if (ex.Response is HttpWebResponse && ex.Response.ContentLength > 0)
+	            var httpWebResponse = ex.Response as HttpWebResponse;
+	            if (httpWebResponse != null && httpWebResponse.ContentLength > 0)
                 {
                     requestState.httpError = true;
+                    requestState.response = httpWebResponse;
 
-                    var raw = ex.Response as HttpWebResponse;
-                    
-                    requestState.response = ex.Response as HttpWebResponse;
-
-                    Stream responseStream = requestState.response.GetCompressedResponseStream();
+                    var responseStream = requestState.response.GetCompressedResponseStream();
 
                     requestState.streamResponse = responseStream;
 
@@ -329,12 +325,18 @@ namespace VK.WindowsPhone.SDK.Util
 
         private static void SafeClose(RequestState state)
         {
-            try
+	        if(state == null)
+	        {
+		        return;
+	        }
+
+			try
             {
                 if (state.streamResponse != null)
                 {
                     state.streamResponse.Close();
                 }
+
                 if (state.response != null)
                 {
                     state.response.Close();
@@ -346,8 +348,7 @@ namespace VK.WindowsPhone.SDK.Util
             }
         }
 #endif
-
-
+		
         private static void SafeInvokeCallback(Action<VKHttpResult> action, bool p, string stringContent)
         {          
             try
@@ -362,43 +363,28 @@ namespace VK.WindowsPhone.SDK.Util
 
         private static string ConvertDictionaryToQueryString(Dictionary<string, string> parameters, bool escapeString)
         {
-            if (parameters == null || parameters.Count == 0)
-                return string.Empty;
+	        if(parameters == null || parameters.Count == 0)
+	        {
+		        return string.Empty;
+	        }
 
-            var sb = new StringBuilder();
+	        var getValue = escapeString
+		        ? (Func<string, string>)Uri.EscapeDataString
+		        : (Func<string, string>)(s => s);
 
-            foreach (var kvp in parameters)
-            {
-                if (kvp.Key == null ||
-                    kvp.Value == null)
-                {
-                    continue;
-                }
+	        var pairs = parameters
+		        .Where(kvp => kvp.Key != null && kvp.Value != null)
+		        .Select(kvp => kvp.Key + "=" + getValue(kvp.Value));
 
-                if (sb.Length > 0)
-                {
-                    sb = sb.Append("&");
-                }
-
-                string valueStr = escapeString ? Uri.EscapeDataString(kvp.Value) : kvp.Value;
-
-                sb = sb.AppendFormat(
-                    "{0}={1}",
-                    kvp.Key,
-                    valueStr);
-            }
-
-            return sb.ToString();
+	        return string.Join("&", pairs);
         }
 
         private static string GetAsLogString(Dictionary<string, string> parameters)
         {
-            string result = "";
-            foreach (var kvp in parameters)
-            {
-                result += kvp.Key + " = " + kvp.Value + Environment.NewLine;
-            }
-            return result;
+	        var pairs = parameters
+				.Select(kvp => kvp.Key + " = " + kvp.Value);
+
+	        return string.Join(Environment.NewLine, pairs);
         }
     }
 }
