@@ -74,7 +74,7 @@ namespace VK.WindowsPhone.SDK.Util
         /// <param name="queryArgs">Map to join</param>
         /// <param name="isUri">Indicates that value parameters must be url-encoded</param>
         /// <returns>Result query string, like k=v&k1=v=1</returns>
-        public static String JoinParams(Dictionary<String, Object> queryArgs, bool isUri = false)
+        public static string JoinParams(Dictionary<string, object> queryArgs, bool isUri = false)
         {
             var args = new List<String>(queryArgs.Count);
             foreach (var entry in queryArgs)
@@ -88,19 +88,19 @@ namespace VK.WindowsPhone.SDK.Util
         }
 
 
-        public static Dictionary<String, string> DictionaryFrom(params string[] args)
+        public static Dictionary<string, string> DictionaryFrom(params string[] args)
         {
             if (args.Length % 2 != 0)
             {
                 throw new Exception("Args must be paired. Last one is ignored");
             }
 
-            var result = new Dictionary<String, string>();
-            for (int i = 0; i + 1 < args.Length; i += 2)
+            var result = new Dictionary<string, string>();
+            for (int i = 0; i < args.Length; i += 2)
             {
                 if (!string.IsNullOrEmpty(args[i + 1]))
                 {
-                    result.Add((String)args[i], args[i + 1]);
+                    result.Add(args[i], args[i + 1]);
                 }
             }
 
@@ -168,7 +168,7 @@ namespace VK.WindowsPhone.SDK.Util
             Task.Run(async () =>
                 {
                     var file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
-
+					
                     await Windows.Storage.FileIO.WriteTextAsync(file, stringToWrite);
 
                 }).Wait();

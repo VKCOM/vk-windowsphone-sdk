@@ -378,16 +378,13 @@ namespace VK.WindowsPhone.SDK
                         {
                             if (responseVal == 1)
                             {
-                                if (MobileCatalogInstallationDetected != null)
-                                {
-                                    MobileCatalogInstallationDetected(null, EventArgs.Empty);
-                                }
+                                MobileCatalogInstallationDetected(null, EventArgs.Empty);
                             }
                         }                        
 
                         VKRequest trackVisitorRequest = new VKRequest("stats.trackVisitor");
 
-                        trackVisitorRequest.Dispatch<object>((res2) => { }, (jsonStr) => new Object());
+                        trackVisitorRequest.Dispatch<object>((res2) => { }, (jsonStr) => new object());
 
                     });                
             }
@@ -405,10 +402,7 @@ namespace VK.WindowsPhone.SDK
                         {
                             if (responseVal == 1)
                             {
-                                if (MobileCatalogInstallationDetected != null)
-                                {
-                                    MobileCatalogInstallationDetected(null, EventArgs.Empty);
-                                }
+                                MobileCatalogInstallationDetected(null, EventArgs.Empty);
                             }
                         }
                     });                
@@ -423,6 +417,7 @@ namespace VK.WindowsPhone.SDK
             VKRequest checkUserInstallRequest = null;
             long appId = 0;
             bool appIdParsed = long.TryParse(Instance.CurrentAppID, out appId);
+
             if (Instance.AccessToken != null)
             {
                 checkUserInstallRequest = new VKRequest("apps.checkUserInstall", "platform", PLATFORM_ID, "app_id", appId.ToString(), "device_id", DeviceId);

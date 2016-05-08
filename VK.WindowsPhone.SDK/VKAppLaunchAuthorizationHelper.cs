@@ -22,12 +22,12 @@ namespace VK.WindowsPhone.SDK
             List<string> scopeList,
             bool revoke)
         {
-            string redirectUri = await GetRedirectUri();
+            var redirectUri = await GetRedirectUri();
 
             var uriString = string.Format(_launchUriStrFrm,
-                WebUtility.UrlEncode(state == null ? string.Empty : state),
+                WebUtility.UrlEncode(state ?? ""),
                 clientId,
-                StrUtil.GetCommaSeparated(scopeList),
+                scopeList.GetCommaSeparated(),
                 revoke,
                 redirectUri);
 
@@ -40,9 +40,7 @@ namespace VK.WindowsPhone.SDK
 
             try
             {
-
                 await Launcher.LaunchUriAsync(new Uri(uriString), new LauncherOptions() { FallbackUri = new Uri(fallbackUri) });
-
             }
             catch (Exception)
             {
@@ -52,8 +50,6 @@ namespace VK.WindowsPhone.SDK
                 MessageBox.Show(msg);
 #endif
             }
-
-
         }
 
         private static async Task<string> GetRedirectUri()
@@ -61,13 +57,12 @@ namespace VK.WindowsPhone.SDK
             return await GetVKLoginCallbackSchemeName() + "://authorize";
         }
 
-        async private static Task<string> GetVKLoginCallbackSchemeName()
+        private static async Task<string> GetVKLoginCallbackSchemeName()
         {
-            string result = await GetFilteredManifestAppAttributeValue("Protocol", "Name", "vk");
-            return result;
+            return await GetFilteredManifestAppAttributeValue("Protocol", "Name", "vk");
         }
 
-        internal async static Task<string> GetFilteredManifestAppAttributeValue(string node, string attribute, string prefix)
+        private static async Task<string> GetFilteredManifestAppAttributeValue(string node, string attribute, string prefix)
         {
 
 #if !SILVERLIGHT

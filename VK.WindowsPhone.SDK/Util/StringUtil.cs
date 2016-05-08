@@ -39,21 +39,7 @@ namespace VK.WindowsPhone.SDK.Util
 
         public static string GetCommaSeparated(this List<string> ids)
         {
-            StringBuilder sb = new StringBuilder();
-
-            int count = ids.Count;
-
-            for (int i = 0; i < count; i++)
-            {
-                sb = sb.Append(ids[i]);
-                if (i != count - 1)
-                {
-                    sb = sb.Append(",");
-                }
-            }
-
-            return sb.ToString();
+	        return string.Join(",", ids);
         }
-
     }
 }

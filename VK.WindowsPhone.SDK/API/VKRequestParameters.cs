@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Serialization;
 using VK.WindowsPhone.SDK.Util;
+using Newtonsoft.Json;
 
 namespace VK.WindowsPhone.SDK.API
 {
@@ -38,7 +40,10 @@ namespace VK.WindowsPhone.SDK.API
 
     public class VKRequestParam
     {
-        public string key { get; set; }
-        public string value { get; set; }
-    }    
+		[JsonProperty("Key")]
+        public string Key { get; set; }
+
+		[JsonProperty("Value")]
+        public string Value { get; set; }
+    }
 }
