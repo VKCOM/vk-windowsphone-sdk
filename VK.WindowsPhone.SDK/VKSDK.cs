@@ -13,6 +13,7 @@ using VK.WindowsPhone.SDK.API;
 using VK.WindowsPhone.SDK.Pages;
 using VK.WindowsPhone.SDK.Util;
 using System.Net;
+using Windows.Security.Authentication.Web;
 
 namespace VK.WindowsPhone.SDK
 {
@@ -189,24 +190,42 @@ namespace VK.WindowsPhone.SDK
 #if SILVERLIGHT
                     RootFrame.Navigate(new Uri(string.Format(VK_NAVIGATE_STR_FRM, string.Join(",", scopeList), revoke), UriKind.Relative));
 #else
-                    var loginUserControl = new VKLoginUserControl();
-
-                    loginUserControl.Scopes = scopeList;
-                    loginUserControl.Revoke = revoke;
-
-                    loginUserControl.ShowInPopup(Windows.UI.Xaml.Window.Current.Bounds.Width,
-                         Windows.UI.Xaml.Window.Current.Bounds.Height);
-
+		            AuthorizeWeb(scopeList, revoke);
 #endif
                     break;
             }
-
-
         }
 
-        private static void AuthorizeVKApp(List<string> scopeList, bool revoke)
+	    public static async void AuthorizeWeb(List<string> scopeList, bool revoke)
+	    {
+		    var resultUri = VKAppLaunchAuthorizationHelper.GetAppAuthUrl(Instance.CurrentAppID);
+		    var authUri = VKAppLaunchAuthorizationHelper.GetOAuthUri(resultUri, scopeList, revoke);
+
+		    try
+		    {
+			    var authResult = await WebAuthenticationBroker.AuthenticateAsync(WebAuthenticationOptions.None, new Uri(authUri), new Uri(resultUri));
+
+			    var response = authResult.ResponseData.Replace("authorize/#", "authorize/?");
+				response = VKUtil.GetParamsOfQueryString(response);
+
+				ProcessLoginResult(response, false, null);
+		    }
+		    catch(Exception ex)
+		    {
+			    Logger.Error("Error at AuthorizeWeb", ex);
+		    }
+	    }
+
+	    private static async void AuthorizeVKApp(List<string> scopeList, bool revoke)
         {
-            VKAppLaunchAuthorizationHelper.AuthorizeVKApp("", VKSDK.Instance.CurrentAppID, scopeList, revoke);
+		    try
+		    {
+			    await VKAppLaunchAuthorizationHelper.AuthorizeVKApp("", Instance.CurrentAppID, scopeList, revoke);
+		    }
+		    catch(Exception ex)
+		    {
+				Logger.Error("Error at AuthorizeVkApp", ex);
+			}
         }
 
 #if SILVERLIGHT

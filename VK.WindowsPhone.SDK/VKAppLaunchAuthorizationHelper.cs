@@ -31,14 +31,8 @@ namespace VK.WindowsPhone.SDK
                 revoke,
                 redirectUri);
 
-            var fallbackUri = string.Format(VKSDK.VK_AUTH_STR_FRM,
-                VKSDK.Instance.CurrentAppID,
-               scopeList.GetCommaSeparated(),
-               WebUtility.UrlEncode("vk" + clientId + "://authorize" ),
-               VKSDK.API_VERSION, 
-               revoke ? 1 : 0);
-
-            try
+            var fallbackUri = GetOAuthUri(GetAppAuthUrl(clientId), scopeList, revoke);
+			try
             {
                 await Launcher.LaunchUriAsync(new Uri(uriString), new LauncherOptions() { FallbackUri = new Uri(fallbackUri) });
             }
@@ -52,7 +46,22 @@ namespace VK.WindowsPhone.SDK
             }
         }
 
-        private static async Task<string> GetRedirectUri()
+	    internal static string GetOAuthUri(string appAuthUrl, List<string> scopeList, bool revoke)
+	    {
+		    return string.Format(VKSDK.VK_AUTH_STR_FRM,
+			    VKSDK.Instance.CurrentAppID,
+			    scopeList.GetCommaSeparated(),
+				WebUtility.UrlEncode(appAuthUrl),
+			    VKSDK.API_VERSION, 
+			    revoke ? 1 : 0);
+	    }
+
+	    internal static string GetAppAuthUrl(string clientID)
+	    {
+		    return "vk" + clientID + "://authorize";
+	    }
+
+	    private static async Task<string> GetRedirectUri()
         {
             return await GetVKLoginCallbackSchemeName() + "://authorize";
         }
