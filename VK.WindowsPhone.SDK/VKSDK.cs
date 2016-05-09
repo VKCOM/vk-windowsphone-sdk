@@ -14,6 +14,7 @@ using VK.WindowsPhone.SDK.Pages;
 using VK.WindowsPhone.SDK.Util;
 using System.Net;
 using Windows.Security.Authentication.Web;
+using Windows.UI.Xaml;
 
 namespace VK.WindowsPhone.SDK
 {
@@ -93,10 +94,6 @@ namespace VK.WindowsPhone.SDK
                                     "If you don't have one, create a standalone app here: https://vk.com/editapp?act=create");
             }
 
-
-
-
-
             Instance.CurrentAppID = appId;
         }
 
@@ -158,8 +155,7 @@ namespace VK.WindowsPhone.SDK
         /// <param name="scopeList">List of permissions for your app</param>
         /// <param name="revoke">If true user will be allowed to logout and change user</param>
         /// <param name="forceOAuth">SDK will use only OAuth authorization via WebBrowser</param>
-        public static void Authorize(List<String> scopeList, bool revoke = false, bool forceOAuth = false,
-            LoginType loginType = LoginType.WebView)
+        public static void Authorize(List<String> scopeList, bool revoke = false, bool forceOAuth = false, LoginType loginType = LoginType.WebView)
         {
             try
             {
@@ -178,25 +174,41 @@ namespace VK.WindowsPhone.SDK
             if (!scopeList.Contains(VKScope.OFFLINE))
                 scopeList.Add(VKScope.OFFLINE);
 
-
             switch (loginType)
             {
                 case LoginType.VKApp:
+					AuthByVKApp(scopeList, revoke);
+					break;
 
-                    AuthorizeVKApp(scopeList, revoke);
-        
-                    break;
-                default:
-#if SILVERLIGHT
-                    RootFrame.Navigate(new Uri(string.Format(VK_NAVIGATE_STR_FRM, string.Join(",", scopeList), revoke), UriKind.Relative));
-#else
-		            AuthorizeWeb(scopeList, revoke);
+#if !SILVERLIGHT
+				case LoginType.WebAuthBroker:
+					AuthByWebAuthBroker(scopeList, revoke);
+		            break;
 #endif
-                    break;
+
+				default:
+					AuthByWebView(scopeList, revoke);
+		            break;
             }
         }
 
-	    public static async void AuthorizeWeb(List<string> scopeList, bool revoke)
+	    private static void AuthByWebView(List<string> scopeList, bool revoke)
+	    {
+#if SILVERLIGHT
+			RootFrame.Navigate(new Uri(string.Format(VK_NAVIGATE_STR_FRM, string.Join(",", scopeList), revoke), UriKind.Relative));
+#else
+		    var loginUserControl = new VKLoginUserControl
+		    {
+			    Scopes = scopeList,
+			    Revoke = revoke
+		    };
+
+		    loginUserControl.ShowInPopup(Window.Current.Bounds.Width, Window.Current.Bounds.Height);
+#endif
+	    }
+
+#if !SILVERLIGHT
+		public static async void AuthByWebAuthBroker(List<string> scopeList, bool revoke)
 	    {
 		    var resultUri = VKAppLaunchAuthorizationHelper.GetAppAuthUrl(Instance.CurrentAppID);
 		    var authUri = VKAppLaunchAuthorizationHelper.GetOAuthUri(resultUri, scopeList, revoke);
@@ -212,11 +224,12 @@ namespace VK.WindowsPhone.SDK
 		    }
 		    catch(Exception ex)
 		    {
-			    Logger.Error("Error at AuthorizeWeb", ex);
+			    Logger.Error("Error at AuthByWebAuthBroker", ex);
 		    }
 	    }
+#endif
 
-	    private static async void AuthorizeVKApp(List<string> scopeList, bool revoke)
+		private static async void AuthByVKApp(List<string> scopeList, bool revoke)
         {
 		    try
 		    {
