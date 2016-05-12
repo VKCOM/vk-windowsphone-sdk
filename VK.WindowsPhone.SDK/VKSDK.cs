@@ -148,14 +148,14 @@ namespace VK.WindowsPhone.SDK
 
         public static IVKLogger Logger;
 
-        /// <summary>
-        /// Starts authorization process. Opens and requests for access if VK App is installed. 
-        /// Otherwise SDK will navigate current app to SDK navigation page and start OAuth in WebBrowser.
-        /// </summary>
-        /// <param name="scopeList">List of permissions for your app</param>
-        /// <param name="revoke">If true user will be allowed to logout and change user</param>
-        /// <param name="forceOAuth">SDK will use only OAuth authorization via WebBrowser</param>
-        public static void Authorize(List<String> scopeList, bool revoke = false, bool forceOAuth = false, LoginType loginType = LoginType.WebView)
+	    /// <summary>
+	    /// Starts authorization process. Opens and requests for access if VK App is installed. 
+	    /// Otherwise SDK will navigate current app to SDK navigation page and start OAuth in WebBrowser.
+	    /// </summary>
+	    /// <param name="scopeList">List of permissions for your app</param>
+	    /// <param name="revoke">If true user will be allowed to logout and change user</param>
+	    /// <param name="loginType">Type of the authentication service to use for authentication</param>
+	    public static void Authorize(List<String> scopeList, bool revoke = false, LoginType loginType = LoginType.WebView)
         {
             try
             {
@@ -283,7 +283,7 @@ namespace VK.WindowsPhone.SDK
         /// <param name="tokenParams">Params of token</param>
         /// <param name="isTokenBeingRenewed">Flag indicating token renewal</param>
         /// <returns>Success if token has been assigned or error</returns>
-        private static CheckTokenResult CheckAndSetToken(Dictionary<String, String> tokenParams, bool isTokenBeingRenewed)
+        private static CheckTokenResult CheckAndSetToken(Dictionary<string, string> tokenParams, bool isTokenBeingRenewed)
         {
             var token = VKAccessToken.TokenFromParameters(tokenParams);
             if (token == null || token.AccessToken == null)
@@ -291,17 +291,11 @@ namespace VK.WindowsPhone.SDK
                 if (tokenParams.ContainsKey(VKAccessToken.SUCCESS))
                     return CheckTokenResult.Success;
 
-                var error = new VKError { error_code = (int)VKResultCode.UserAuthorizationFailed };
-
                 return CheckTokenResult.Error;
             }
-            else
-            {
-                SetAccessToken(token, isTokenBeingRenewed);
-                return CheckTokenResult.Success;
-            }
 
-
+			SetAccessToken(token, isTokenBeingRenewed);
+            return CheckTokenResult.Success;
         }
 
         /// <summary>
@@ -311,9 +305,9 @@ namespace VK.WindowsPhone.SDK
         /// <param name="renew">Is token being renewed. Raises different event handlers (AccessTokenReceived or AccessTokenRenewed)</param>
         public static void SetAccessToken(VKAccessToken token, bool renew = false)
         {
-            if (Instance.AccessToken == null ||
-                (Instance.AccessToken.AccessToken != token.AccessToken ||
-                 Instance.AccessToken.ExpiresIn != token.ExpiresIn))
+            if (Instance.AccessToken == null
+				|| Instance.AccessToken.AccessToken != token.AccessToken
+				|| Instance.AccessToken.ExpiresIn != token.ExpiresIn)
             {
                 Instance.AccessToken = token;
 
