@@ -46,13 +46,13 @@ namespace SDK_Sample
 
         private void AuthorizeButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
         {
-            VKSDK.Authorize(_scope, false, false );
+            VKSDK.Authorize(_scope, false);
         }
 
 
         private void AuthorizeButton2OnClick(object sender, RoutedEventArgs e)
         {
-            VKSDK.Authorize(_scope, false, false, LoginType.VKApp);
+            VKSDK.Authorize(_scope, false, LoginType.VKApp);
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)

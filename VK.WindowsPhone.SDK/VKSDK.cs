@@ -7,14 +7,13 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 #else
-
+using Windows.Security.Authentication.Web;
+using Windows.UI.Xaml;
 #endif
 using VK.WindowsPhone.SDK.API;
 using VK.WindowsPhone.SDK.Pages;
 using VK.WindowsPhone.SDK.Util;
 using System.Net;
-using Windows.Security.Authentication.Web;
-using Windows.UI.Xaml;
 
 namespace VK.WindowsPhone.SDK
 {

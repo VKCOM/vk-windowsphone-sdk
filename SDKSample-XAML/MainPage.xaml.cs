@@ -96,12 +96,12 @@ namespace SDKSample_XAML
 
         private void AuthorizeButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
         {
-            VKSDK.Authorize(_scope, false, false);
+            VKSDK.Authorize(_scope, false);
         }
 
         void AuthorizeButton2_Click(object sender, RoutedEventArgs e)
         {
-            VKSDK.Authorize(_scope, false, false, LoginType.VKApp);
+            VKSDK.Authorize(_scope, false, LoginType.VKApp);
         }
 
 
