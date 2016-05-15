@@ -4,6 +4,46 @@ using VK.WindowsPhone.SDK.Json;
 
 namespace VK.WindowsPhone.SDK.API.Model
 {
+	public class VKMarketAlbum
+	{
+		/// <summary>
+		/// Идентификатор подборки
+		/// </summary>
+		[JsonProperty("id")]
+		public long AlbumID { get; set; }
+
+		/// <summary>
+		/// идентификатор владельца подборки
+		/// </summary>
+		[JsonProperty("owner_id")]
+		public long OwnerID { get; set; }
+
+		/// <summary>
+		/// название подборки
+		/// </summary>
+		[JsonProperty("title")]
+		public string Title { get; set; }
+		
+		/// <summary>
+		/// Обложка подборки
+		/// </summary>
+		[JsonProperty("photo")]
+		public VKPhoto CoverPhoto { get; set; }
+
+		/// <summary>
+		/// Количество товаров в подборке
+		/// </summary>
+		[JsonProperty("count")]
+		public long GoodsCount { get; set; }
+
+		/// <summary>
+		/// дата обновления подборки
+		/// </summary>
+		[JsonProperty("updated_time")]
+		[JsonConverter(typeof(JsonUnixTimeConverter))]
+		public DateTime UpdateTime { get; set; }
+	}
+
 	public class VKMarketItemPrice
 	{
 		/// <summary>
