@@ -3,14 +3,79 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Serialization;
 using VK.WindowsPhone.SDK.Util;
+using Newtonsoft.Json;
+using VK.WindowsPhone.SDK.Json;
 
 namespace VK.WindowsPhone.SDK.API.Model
 {
+	public class VKCurrency
+	{
+		/// <summary>
+		/// Идентификатор валюты
+		/// </summary>
+		[JsonProperty("id")]
+		public long CurrencyID { get; set; }
+
+		/// <summary>
+		/// Символьное обозначение валюты
+		/// </summary>
+		[JsonProperty("name")]
+		public string Name { get; set; }
+	}
+
+	public class VKMarket
+	{
+		/// <summary>
+		/// Указывает влючены ли в сообщстве товары
+		/// </summary>
+		[JsonProperty("enabled")]
+		[JsonConverter(typeof(JsonBoolConverter))]
+		public bool IsEnabled { get; set; }
+
+		/// <summary>
+		/// Минимальная цена товаров
+		/// </summary>
+		[JsonProperty("price_min")]
+		public double PriceMin { get; set; }
+
+		/// <summary>
+		/// Максимальная цена товаров
+		/// </summary>
+		[JsonProperty("price_max")]
+		public double PriceMax { get; set; }
+
+		/// <summary>
+		/// Идентификатор главной подборки товаров
+		/// </summary>
+		[JsonProperty("main_album_id")]
+		public long MainAlbumID { get; set; }
+
+		/// <summary>
+		/// Идентификатор контактного лица для связи с продавцом.
+		/// </summary>
+		/// <returns>Возвращается отрицательное значение(идентификатор группы), если используется "Сообщения сообщества" для связи с продавцом</returns>
+		[JsonProperty("contact_id")]
+		public long ContactID { get; set; }
+
+		/// <summary>
+		/// Возвращает информацию о используемой валюте
+		/// </summary>
+		[JsonProperty("currency")]
+		public VKCurrency Currency { get; set; }
+
+		/// <summary>
+		/// Текстовое описние валюты
+		/// </summary>
+		[JsonProperty("currency_text")]
+		public string CurrencyText { get; set; }
+	}
+	
    /// <summary>
    /// https://vk.com/dev/fields_groups
    /// </summary>
-    public partial class VKGroup
+	public partial class VKGroup
     {
         public long id { get; set; }
 
@@ -120,6 +185,11 @@ namespace VK.WindowsPhone.SDK.API.Model
 
         public string site { get; set; }
 
+		/// <summary>
+		/// Получает информацию о магазине
+		/// </summary>
+		[JsonProperty("market")]
+		public VKMarket Market { get; set; }
     }
 
     public class VKPlace

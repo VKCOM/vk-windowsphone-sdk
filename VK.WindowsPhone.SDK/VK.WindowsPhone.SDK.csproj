@@ -101,6 +101,7 @@
     <Compile Include="API\Model\VKDocument.cs" />
     <Compile Include="API\Model\VKGeo.cs" />
     <Compile Include="API\Model\VKGroup.cs" />
+    <Compile Include="API\Model\VKMarketItem.cs" />
     <Compile Include="API\Model\VKLink.cs" />
     <Compile Include="API\Model\VKList.cs" />
     <Compile Include="API\Model\VKMessage.cs" />
@@ -121,6 +122,8 @@
     <Compile Include="API\VKResultCode.cs" />
     <Compile Include="API\VKUploadRequest.cs" />
     <Compile Include="API\VKValidationRequest.cs" />
+    <Compile Include="Json\JsonBoolConverter.cs" />
+    <Compile Include="Json\JsonUnixTimeConverter.cs" />
     <Compile Include="Localization\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

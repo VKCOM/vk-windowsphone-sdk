@@ -83,6 +83,9 @@
     <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKList.cs">
       <Link>API\Model\VKList.cs</Link>
     </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKMarketItem.cs">
+      <Link>API\Model\VKMarketItem.cs</Link>
+    </Compile>
     <Compile Include="..\VK.WindowsPhone.SDK\API\Model\VKMessage.cs">
       <Link>API\Model\VKMessage.cs</Link>
     </Compile>
@@ -136,6 +139,12 @@
     </Compile>
     <Compile Include="..\VK.WindowsPhone.SDK\API\VKValidationRequest.cs">
       <Link>API\VKValidationRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\Json\JsonBoolConverter.cs">
+      <Link>Json\JsonBoolConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\VK.WindowsPhone.SDK\Json\JsonUnixTimeConverter.cs">
+      <Link>Json\JsonUnixTimeConverter.cs</Link>
     </Compile>
     <Compile Include="..\VK.WindowsPhone.SDK\LoginType.cs">
       <Link>LoginType.cs</Link>
