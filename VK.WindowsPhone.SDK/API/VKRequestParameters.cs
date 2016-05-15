@@ -41,9 +41,9 @@ namespace VK.WindowsPhone.SDK.API
     public class VKRequestParam
     {
 		[JsonProperty("Key")]
-        public string Key { get; set; }
+        public string key { get; set; }
 
 		[JsonProperty("Value")]
-        public string Value { get; set; }
+        public string value { get; set; }
     }
 }
