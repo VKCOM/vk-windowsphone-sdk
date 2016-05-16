@@ -12,7 +12,7 @@ namespace VK.WindowsPhone.SDK_XAML.Pages
     {
         private Popup _parentPopup;
 
-        private static List<VKPopupControlBase> _currentlyShownInstances = new List<VKPopupControlBase>();
+        private static readonly List<VKPopupControlBase> _currentlyShownInstances = new List<VKPopupControlBase>();
 
         public static List<VKPopupControlBase> CurrentlyShownInstances
         {
@@ -22,18 +22,32 @@ namespace VK.WindowsPhone.SDK_XAML.Pages
             }
         }
 
+	    public static bool CloseCurrent()
+	    {
+		    var currentInstance = _currentlyShownInstances.FirstOrDefault();
+			if(currentInstance == null)
+			{
+				return false;
+			}
+
+		    currentInstance.IsShown = false;
+		    return true;
+	    }
 
         public bool IsShown
         {
             get
             {
-                return _parentPopup.IsOpen;
+                return _parentPopup != null && _parentPopup.IsOpen;
             }
             set
             {
-                _parentPopup.IsOpen = value;
+	            if(_parentPopup != null)
+	            {
+		            _parentPopup.IsOpen = value;
+	            }
 
-                if (!value)
+	            if (!value)
                 {
                     OnClosing();
                     _currentlyShownInstances.Remove(this);
