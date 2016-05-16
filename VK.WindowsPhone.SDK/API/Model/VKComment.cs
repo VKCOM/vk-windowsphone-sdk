@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Serialization;
 using VK.WindowsPhone.SDK.Util;
+using Newtonsoft.Json;
 
 namespace VK.WindowsPhone.SDK.API.Model
 {
@@ -27,5 +29,8 @@ namespace VK.WindowsPhone.SDK.API.Model
         public long reply_to_comment { get; set; }
 
         public List<VKAttachment> attachments { get; set; }
+
+		[JsonProperty("likes")]
+		public VKLikes Likes { get; set; }
     }
 }
