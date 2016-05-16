@@ -194,9 +194,6 @@
     <Compile Include="Pages\VKCaptchaRequestUserControl.xaml.cs">
       <DependentUpon>VKCaptchaRequestUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\VKLoginUserControl.xaml.cs">
-      <DependentUpon>VKLoginUserControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\VKPopupControlBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Strings\Resources.cs" />
@@ -210,10 +207,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Pages\VKCaptchaRequestUserControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\VKLoginUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

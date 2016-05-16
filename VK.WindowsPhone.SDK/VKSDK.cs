@@ -6,12 +6,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
+using VK.WindowsPhone.SDK.Pages;
 #else
 using Windows.Security.Authentication.Web;
 using Windows.UI.Xaml;
 #endif
 using VK.WindowsPhone.SDK.API;
-using VK.WindowsPhone.SDK.Pages;
 using VK.WindowsPhone.SDK.Util;
 using System.Net;
 
@@ -179,35 +179,19 @@ namespace VK.WindowsPhone.SDK
 					AuthByVKApp(scopeList, revoke);
 					break;
 
-#if !SILVERLIGHT
-				case LoginType.WebAuthBroker:
-					AuthByWebAuthBroker(scopeList, revoke);
-		            break;
-#endif
-
 				default:
 					AuthByWebView(scopeList, revoke);
 		            break;
             }
         }
 
-	    private static void AuthByWebView(List<string> scopeList, bool revoke)
-	    {
 #if SILVERLIGHT
+		private static void AuthByWebView(List<string> scopeList, bool revoke)
+	    {
 			RootFrame.Navigate(new Uri(string.Format(VK_NAVIGATE_STR_FRM, string.Join(",", scopeList), revoke), UriKind.Relative));
-#else
-		    var loginUserControl = new VKLoginUserControl
-		    {
-			    Scopes = scopeList,
-			    Revoke = revoke
-		    };
-
-		    loginUserControl.ShowInPopup(Window.Current.Bounds.Width, Window.Current.Bounds.Height);
-#endif
 	    }
-
-#if !SILVERLIGHT
-		public static async void AuthByWebAuthBroker(List<string> scopeList, bool revoke)
+#else
+		public static async void AuthByWebView(List<string> scopeList, bool revoke)
 	    {
 		    var resultUri = VKAppLaunchAuthorizationHelper.GetAppAuthUrl(Instance.CurrentAppID);
 		    var authUri = VKAppLaunchAuthorizationHelper.GetOAuthUri(resultUri, scopeList, revoke);
@@ -263,7 +247,7 @@ namespace VK.WindowsPhone.SDK
         private static void CheckConditions()
         {
 #if SILVERLIGHT
-            if (Application.Current.RootVisual as Frame == null)
+            if (Application.Current.RootVisual is Frame)
                 throw new Exception("Application.Current.RootVisual is supposed to be PhoneApplicationFrame");
 
 #endif
@@ -550,21 +534,28 @@ namespace VK.WindowsPhone.SDK
 
         internal static void InvokeValidationRequest(VKValidationRequest request, Action<VKValidationResponse> callback)
         {
-            VKExecute.ExecuteOnUIThread(() =>
+            VKExecute.ExecuteOnUIThread(async () =>
                 {
 #if SILVERLIGHT
                     VKParametersRepository.SetParameterForId("ValidationCallback", callback);
                     RootFrame.Navigate(new Uri(string.Format("/VK.WindowsPhone.SDK;component/Pages/VKLoginPage.xaml?ValidationUri={0}", HttpUtility.UrlEncode(request.ValidationUri)), UriKind.Relative));
 #else
-                    var loginUserControl = new VKLoginUserControl();
+					const string compleleteUri = "https://oauth.vk.com/blank.html";
 
-                    loginUserControl.ValidationUri = request.ValidationUri;
-                    loginUserControl.ValidationCallback = callback;
+					try
+					{
+						var authResult = await WebAuthenticationBroker.AuthenticateAsync(WebAuthenticationOptions.None, new Uri(request.ValidationUri), new Uri(compleleteUri));
 
-                    loginUserControl.ShowInPopup(Windows.UI.Xaml.Window.Current.Bounds.Width,
-                         Windows.UI.Xaml.Window.Current.Bounds.Height); 
+						var response = authResult.ResponseData.Replace("authorize/#", "authorize/?");
+						response = VKUtil.GetParamsOfQueryString(response);
+
+						ProcessLoginResult(response, true, callback);
+					}
+					catch (Exception ex)
+					{
+						Logger.Error("Error at InvokeValidationRequest", ex);
+					}
 #endif
-
                 });
 
         }

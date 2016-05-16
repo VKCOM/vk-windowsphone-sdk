@@ -9,13 +9,6 @@ namespace VK.WindowsPhone.SDK
     public enum LoginType
     {
         WebView,
-        VKApp,
-
-#if !SILVERLIGHT
-		/// <summary>
-		/// Use WebAuthenticationBroker to authenticate VK user by OAuth provider.
-		/// </summary>
-		WebAuthBroker
-#endif
+        VKApp
 	}
 }
