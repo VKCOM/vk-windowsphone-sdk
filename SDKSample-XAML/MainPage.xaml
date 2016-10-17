@@ -41,6 +41,7 @@
                         <Button x:Name="GetFriends" Content="Get friends" Click="GetFriends_Click"/>
                         <Button x:Name="Publish" Content="Publish" Click="Publish_Click"/>
                         <Button x:Name="BuyButton" Content="Buy something in-app" Click="BuyButton_Click"/>
+                        <Button x:Name="SendRequest" Content="Send request" Click="SendRequestButton_Click"/>
                         <Image Width="60" Height="60" Name="userImage" Stretch="UniformToFill" />
                         <TextBlock Name="userInfo" />
                         <TextBlock Name="friends" />

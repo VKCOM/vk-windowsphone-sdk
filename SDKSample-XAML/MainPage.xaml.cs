@@ -202,5 +202,15 @@ namespace SDKSample_XAML
                 /* Handle exception */
             }
         }
+
+        private void SendRequestButton_Click(object sender, RoutedEventArgs e)
+        {
+            VKRequest.Dispatch<int>(new VKRequestParameters("apps.sendRequest", "user_id", "185561181", "text", "wow", "type", "request"),
+                (res) =>
+                {
+                  
+                },
+                (jsonStr) => 0);
+        }
     }
 }
