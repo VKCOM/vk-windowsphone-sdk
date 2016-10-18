@@ -22,27 +22,19 @@ namespace VK.WindowsPhone.SDK
             List<string> scopeList,
             bool revoke)
         {
-            string redirectUri = await GetRedirectUri();
+            var redirectUri = await GetRedirectUri();
 
             var uriString = string.Format(_launchUriStrFrm,
-                WebUtility.UrlEncode(state == null ? string.Empty : state),
+                WebUtility.UrlEncode(state ?? ""),
                 clientId,
-                StrUtil.GetCommaSeparated(scopeList),
+                scopeList.GetCommaSeparated(),
                 revoke,
                 redirectUri);
 
-            var fallbackUri = string.Format(VKSDK.VK_AUTH_STR_FRM,
-                VKSDK.Instance.CurrentAppID,
-               scopeList.GetCommaSeparated(),
-               WebUtility.UrlEncode("vk" + clientId + "://authorize" ),
-               VKSDK.API_VERSION, 
-               revoke ? 1 : 0);
-
-            try
+            var fallbackUri = GetOAuthUri(GetAppAuthUrl(clientId), scopeList, revoke);
+			try
             {
-
                 await Launcher.LaunchUriAsync(new Uri(uriString), new LauncherOptions() { FallbackUri = new Uri(fallbackUri) });
-
             }
             catch (Exception)
             {
@@ -52,22 +44,34 @@ namespace VK.WindowsPhone.SDK
                 MessageBox.Show(msg);
 #endif
             }
-
-
         }
 
-        private static async Task<string> GetRedirectUri()
+	    internal static string GetOAuthUri(string appAuthUrl, List<string> scopeList, bool revoke)
+	    {
+		    return string.Format(VKSDK.VK_AUTH_STR_FRM,
+			    VKSDK.Instance.CurrentAppID,
+			    scopeList.GetCommaSeparated(),
+				WebUtility.UrlEncode(appAuthUrl),
+			    VKSDK.API_VERSION, 
+			    revoke ? 1 : 0);
+	    }
+
+	    internal static string GetAppAuthUrl(string clientID)
+	    {
+		    return "vk" + clientID + "://authorize";
+	    }
+
+	    private static async Task<string> GetRedirectUri()
         {
             return await GetVKLoginCallbackSchemeName() + "://authorize";
         }
 
-        async private static Task<string> GetVKLoginCallbackSchemeName()
+        private static async Task<string> GetVKLoginCallbackSchemeName()
         {
-            string result = await GetFilteredManifestAppAttributeValue("Protocol", "Name", "vk");
-            return result;
+            return await GetFilteredManifestAppAttributeValue("Protocol", "Name", "vk");
         }
 
-        internal async static Task<string> GetFilteredManifestAppAttributeValue(string node, string attribute, string prefix)
+        private static async Task<string> GetFilteredManifestAppAttributeValue(string node, string attribute, string prefix)
         {
 
 #if !SILVERLIGHT

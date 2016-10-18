@@ -6,7 +6,6 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using VK.WindowsPhone.SDK;
 using VK.WindowsPhone.SDK.API;
 using VK.WindowsPhone.SDK.API.Model;
-using VK.WindowsPhone.SDK.Pages;
 using VK.WindowsPhone.SDK.Util;
 using VK.WindowsPhone.SDK_XAML.Pages;
 using Windows.ApplicationModel;
@@ -89,19 +88,19 @@ namespace SDKSample_XAML
         {
             if (VKPopupControlBase.CurrentlyShownInstances.Count > 0)
             {
-                VKLoginUserControl.CurrentlyShownInstances.Last().IsShown = false;
+				VKPopupControlBase.CurrentlyShownInstances.Last().IsShown = false;
                 e.Handled = true;
             }
         }
 
         private void AuthorizeButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
         {
-            VKSDK.Authorize(_scope, false, false);
+            VKSDK.Authorize(_scope, false);
         }
 
         void AuthorizeButton2_Click(object sender, RoutedEventArgs e)
         {
-            VKSDK.Authorize(_scope, false, false, LoginType.VKApp);
+            VKSDK.Authorize(_scope, false, LoginType.VKApp);
         }
 
 

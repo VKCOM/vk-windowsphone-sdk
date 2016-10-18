@@ -26,7 +26,7 @@ namespace VK.WindowsPhone.SDK.API
 
         private VKRequestParameters _parameters;
       
-        private static readonly string REQUEST_BASE_URI_FRM = "https://api.vk.com/method/{0}";
+        private static readonly string REQUEST_BASE_URI_FRM = "https://api.vk.com/method/";
 
         private static readonly string ERROR_PREFIX_GENERAL = @"{""error"":{";
 
@@ -127,7 +127,7 @@ namespace VK.WindowsPhone.SDK.API
                 parametersDict["access_token"] = accessToken.AccessToken;
             }
 
-            var dispatchUri = string.Format(REQUEST_BASE_URI_FRM, _parameters.MethodName);
+            var dispatchUri = REQUEST_BASE_URI_FRM + _parameters.MethodName;
 
             VKHttpRequestHelper.DispatchHTTPRequest(
                 dispatchUri,
@@ -227,12 +227,11 @@ namespace VK.WindowsPhone.SDK.API
                 {
                     result.Error = JsonConvert.DeserializeObject<ErrorRoot>(dataString).error;
 
-                    VKResultCode resultCode = VKResultCode.UnknownError;
-
-                    if (Enum.TryParse<VKResultCode>(result.Error.error_code.ToString(), out resultCode))
-                    {
-                        result.ResultCode = resultCode;
-                    }
+	                VKResultCode resultCode = (VKResultCode)result.Error.error_code;
+					if(Enum.IsDefined(typeof(VKResultCode), resultCode))
+	                {
+						result.ResultCode = resultCode;
+	                }
                 }
                 catch (Exception)
                 {
@@ -276,7 +275,7 @@ namespace VK.WindowsPhone.SDK.API
 
     public class GenericRoot<T>
     {
+		[JsonProperty("response")]
         public T response { get; set; }
     }
-
 }

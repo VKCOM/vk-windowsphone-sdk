@@ -10,5 +10,5 @@ namespace VK.WindowsPhone.SDK
     {
         WebView,
         VKApp
-    }
+	}
 }
